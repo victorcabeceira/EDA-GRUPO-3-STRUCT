@@ -21,7 +21,7 @@ int menu_opcoes(){
     printf("\n10 - Sair\n\n");
     printf("\n      Digite a sua escolha: ");
     scanf("%d",&op);
-     if((op<1)||(op>7)){
+     if((op<1)||(op>10)){
      	printf("\n\n      Op\x87\xC6o n\xC6o existente\n\n");
      }
     return (op);
