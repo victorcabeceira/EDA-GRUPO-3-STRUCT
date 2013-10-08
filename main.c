@@ -13,11 +13,11 @@ void imprimeGride (){//lembrando que esta função somente irá imprimir!
             for(j=0;j<tamanhoGride;j++){
             if(i==0 && j==0){printf("0  ");}                            
             else if(i==0){
-              if(j>9){printf("%d ",j);}       
+              if(j>9){printf("%d ",j);} //maior que 9 pois acima disso será 2 algorismos,quebrando a formatação      
               else{printf(" %d ",j);}
             }
             else if(j==0){
-             if(i>9){printf("%d",i);}       
+             if(i>9){printf("%d",i);} //maior que 9 pois acima disso será 2 algorismos,quebrando a formatação    
               else{printf("%d ",i);}
             }
             else{
