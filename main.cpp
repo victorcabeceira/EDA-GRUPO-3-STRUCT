@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
-#include "GeoLib.c"
+#include "GeoLib.h"
 
 #define tamanhoGride 20//tamanho teste
 
@@ -27,43 +27,22 @@ int menu_opcoes(){
     return (op);
 }//Fim da função de Opções
 
-void imprimeGride (){//lembrando que esta função somente irá imprimir!
-     int i,j;
-     char gride[tamanhoGride][tamanhoGride];//gride teste
-     
-          for(i=0;i<tamanhoGride;i++){
-          
-            for(j=0;j<tamanhoGride;j++){
-            if(i==0 && j==0){printf("0  ");}                            
-            else if(i==0){
-              if(j>9){printf("%d ",j);} //maior que 9 pois acima disso será 2 algorismos,quebrando a formatação      
-              else{printf(" %d ",j);}
-            }
-            else if(j==0){
-             if(i>9){printf("%d",i);} //maior que 9 pois acima disso será 2 algorismos,quebrando a formatação    
-              else{printf("%d ",i);}
-            }
-            else{
-            gride[i][j] =' ';//atribuição teste
-            printf("|%c ",gride[i][j]);
-            }
-            }
-          printf("\n");                     
-          }
 
-}
 //Funcao Main
 main(){
 	//Declaração de Variaveis
 	int opcao;
 	//While para o menu
+	 
 	while (opcao!=10){
 		system("cls");
+	
 	    printf("\n================================Plotagem de Figuras=============================\n\n");
 		opcao=menu_opcoes(); //Chama a função menu_opcoes
 	    system ("cls");
 	       switch (opcao){
 	       	  case 1:{
+                
 	       	  	 
 	       	  	 break;
 	       	  }
@@ -96,7 +75,7 @@ main(){
 			  	break;
 			  }
 			  case 9:{
-              imprimeGride(); //Funcao para imprimir grade.
+               //Funcao para imprimir grade.
 			  	break;
 			  }
 		  }//Fim do Switch
