@@ -105,7 +105,9 @@ void IncluirLinha(struct TVLinhas *linha,struct Gride *gride,char simbolo){
      
      for(i=linhainicial;i<=linhafinal;i++){
       for(j=colunainicial;j<=colunafinal;j++){
-     gride->Grid[i][j]=simbolo;
+      if(j==colunainicial || i == linhainicial){
+      gride->Grid[i][j]=simbolo;
+      }
       }
      }
 }

@@ -83,14 +83,14 @@ main(){
                     else{
                         printf("Digite as cordenadas iniciais:\n");
                         printf("Coluna:\n");
-                        scanf("%d",&linhas.elementos[pontos.Qtd].primeiroponto.x);
+                        scanf("%d",&linhas.elementos[linhas.Qtd].primeiroponto.x);
                         printf("Linha:\n");
-                        scanf("%d",&linhas.elementos[pontos.Qtd].primeiroponto.y);
+                        scanf("%d",&linhas.elementos[linhas.Qtd].primeiroponto.y);
                         printf("Digite as cordenadas finais:\n");
                         printf("Coluna:\n");
-                        scanf("%d",&linhas.elementos[pontos.Qtd].segundoponto.x);
+                        scanf("%d",&linhas.elementos[linhas.Qtd].segundoponto.x);
                         printf("Linha:\n");
-                        scanf("%d",&linhas.elementos[pontos.Qtd].segundoponto.y);
+                        scanf("%d",&linhas.elementos[linhas.Qtd].segundoponto.y);
                         fflush(stdin);
                         printf("Digite o tipo do ponto:\n");
                         scanf("%c",&simbolo);
