@@ -1,8 +1,8 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <string>
-#include <conio.h>
-#define ERRO printf("\nErro!\n")
+    #include <stdlib.h>
+    #include <string>
+    #include <conio.h>
+    #define ERRO printf("\nErro!\n")
 
 //Parte 1: Alocação dinamica
 
@@ -10,32 +10,32 @@
 
 char **Alocar(int i,int j){
 	
-	int cont;
-	char **PontMat; //Ponteiro para a matriz
+    int cont;
+    char **PontMat; //Ponteiro para a matriz
 	
-	//Alocando
-	PontMat=(char**)malloc(i*sizeof(char*));    //É importante observar que temos aqui uma alocação de duas dimensões
-	   /*if(PontMat == NULL){
+    //Alocando
+    PontMat=(char**)malloc(i*sizeof(char*));    //É importante observar que temos aqui uma alocação de duas dimensões
+    /*if(PontMat == NULL){
 	   	ERRO;
 	   	return (NULL);
 	   }*/
-	   //Colunas
-	     for(cont=0;cont<j;cont++){
-	     	PontMat[cont]=(char*)malloc(j*sizeof(char));  //Para cada linha vamos alocar colunas
-	     	   /*if(PontMat[cont] == NULL){
+    //Colunas
+    for(cont=0;cont<j;cont++){
+        PontMat[cont]=(char*)malloc(j*sizeof(char));  //Para cada linha vamos alocar colunas
+        /*if(PontMat[cont] == NULL){
 	     	   	ERRO;
 	     	   	return (NULL);
 	     	   }*/
-	     }
+    }
 	
-	  //Retornando o ponteiro da matriz criada
-	  return(PontMat);
+    //Retornando o ponteiro da matriz criada
+    return(PontMat);
 	
 }
 struct Gride {
     int QX, QY; //QX: unidades do eixo X (colunas), QY: unidades do eixo Y (linhas).
     char **Grid;
- Gride(int pQX = 60, int pQY = 30){
+    Gride(int pQX = 60, int pQY = 30){
         QX = pQX;
         QY = pQY;
         Grid = Alocar(QY, QX);
@@ -46,53 +46,74 @@ struct Gride {
 };
 
 struct TPonto{
-       int x,y;
+    int x,y;
 };
 struct TLinha{
-       struct TPonto ponto;
-       int tamanho;
+    struct TPonto ponto;
+    int tamanho;
 };
 struct TTriangulo{
-       struct TLinha linha;
-       int altura;
+    struct TLinha linha;
+    int altura;
 };
 struct TRetangulo{
-       struct TLinha linha;
-       int x,y;
+    struct TLinha linha;
+    int x,y;
 };
 
 struct TVPontos{
-       struct TPonto elementos[5];         
-       int Qtd;
-TVPontos(){Qtd=0;}       
+    struct TPonto elementos[5];         
+    int Qtd;
+    TVPontos(){Qtd=0;}       
 };
 
-void PlotarPonto(struct TPonto *ponto, struct Gride *gride,char simbolo){
+void PlotarPonto(struct TVPontos *ponto, struct Gride *gride,char simbolo){
                    
-       gride->Grid[ponto->y][ponto->x]=simbolo;
+    gride->Grid[ponto->elementos[ponto->Qtd].y][ponto->elementos[ponto->Qtd].x]=simbolo;
 
 }
-void imprimeGride(struct Gride *gride){//lembrando que esta função somente irá imprimir!
-         int i,j;
-         int tamanhoGride =20;
+void ExcluirPonto(struct TVPontos *pontos,int cordenadas[],Gride *gride){
+    int i,j,retorno = 0;
+    
+    for(i=0;i<pontos->Qtd;i++){
+        if(cordenadas[0]==pontos->elementos[i].x && cordenadas[1]==pontos->elementos[i].y){
+            gride->Grid[pontos->elementos[i].y][pontos->elementos[i].x]='.';
+            pontos->elementos[i]=pontos->elementos[i+1];
+            pontos->Qtd--;  
+            printf("Exclusao efetuada com sucesso!\n");
+            retorno =1;
+        }
+     
+    }
+    if(retorno==0){
+     
+        printf("Ponto nao encontrado!\n");    
+    }
+     
          
-         for(i=0;i<tamanhoGride;i++){
-          for(j=0;j<tamanhoGride;j++){
+}
+
+void imprimeGride(struct Gride *gride){//lembrando que esta função somente irá imprimir!
+    int i,j;
+    int tamanhoGride =20;
+         
+    for(i=0;i<tamanhoGride;i++){
+        for(j=0;j<tamanhoGride;j++){
             if(i==0 && j==0){printf("0  ");}                            
             else if(i==0){
-              if(j>9){printf("%d ",j);} //maior que 9 pois acima disso será 2 algorismos,quebrando a formatação      
-              else{printf(" %d ",j);}
+                if(j>9){printf("%d ",j);} //maior que 9 pois acima disso será 2 algorismos,quebrando a formatação      
+                else{printf(" %d ",j);}
             }
             else if(j==0){
-             if(i>9){printf("%d",i);} //maior que 9 pois acima disso será 2 algorismos,quebrando a formatação    
-              else{printf("%d ",i);}
+                if(i>9){printf("%d",i);} //maior que 9 pois acima disso será 2 algorismos,quebrando a formatação    
+                else{printf("%d ",i);}
             }
             else{
-            
-            printf(" %c ",gride->Grid[i][j]);
+                       
+                printf(" %c ",gride->Grid[i][j]);
             }
-            }
-          printf("\n");                     
-          }
+        }
+        printf("\n");                     
+    }
 
 }
