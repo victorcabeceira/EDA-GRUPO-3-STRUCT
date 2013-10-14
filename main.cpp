@@ -32,10 +32,11 @@ int menu_opcoes(){
 main(){
     system("color f1");    
     //Declaração de Variaveis
-    int opcao,cordenadas[2];
+    int opcao,cordenadas[4];
     char simbolo;
     struct TVPontos pontos;
     struct Gride gride;
+    struct TVLinhas linhas;
     //While para o menu
     while (opcao!=9){
         system("cls");
@@ -65,7 +66,7 @@ main(){
                     break;
                 }
             case 2:{
-                    printf("Informe as cordenadas do seu ponto:\n");
+                    printf("Informe as cordenadas do inicio da sua linha:\n");
                     printf("Coluna:\n");
                     scanf("%d",&cordenadas[0]);
                     printf("Linha:\n");
@@ -75,7 +76,28 @@ main(){
                     break;
                 }
             case 3:{
-                 
+                    if(pontos.Qtd >= 5 ){
+                        printf("Quantidade excedida!\n");
+                        system("pause");
+                    }
+                    else{
+                        printf("Digite as cordenadas iniciais:\n");
+                        printf("Coluna:\n");
+                        scanf("%d",&linhas.elementos[pontos.Qtd].primeiroponto.x);
+                        printf("Linha:\n");
+                        scanf("%d",&linhas.elementos[pontos.Qtd].primeiroponto.y);
+                        printf("Digite as cordenadas finais:\n");
+                        printf("Coluna:\n");
+                        scanf("%d",&linhas.elementos[pontos.Qtd].segundoponto.x);
+                        printf("Linha:\n");
+                        scanf("%d",&linhas.elementos[pontos.Qtd].segundoponto.y);
+                        fflush(stdin);
+                        printf("Digite o tipo do ponto:\n");
+                        scanf("%c",&simbolo);
+                        IncluirLinha(&linhas,&gride,simbolo);
+                        linhas.Qtd ++;
+                    }            
+	       	  	 
                     break;
                 }
             case 4:{

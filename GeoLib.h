@@ -49,8 +49,9 @@ struct TPonto{
     int x,y;
 };
 struct TLinha{
-    struct TPonto ponto;
-    int tamanho;
+    struct TPonto primeiroponto;
+    struct TPonto segundoponto;
+    
 };
 struct TTriangulo{
     struct TLinha linha;
@@ -65,6 +66,11 @@ struct TVPontos{
     struct TPonto elementos[5];         
     int Qtd;
     TVPontos(){Qtd=0;}       
+};
+struct TVLinhas{
+    struct TLinha elementos[5];         
+    int Qtd;
+    TVLinhas(){Qtd=0;}       
 };
 
 void PlotarPonto(struct TVPontos *ponto, struct Gride *gride,char simbolo){
@@ -89,8 +95,19 @@ void ExcluirPonto(struct TVPontos *pontos,int cordenadas[],Gride *gride){
      
         printf("Ponto nao encontrado!\n");    
     }
+ 
+}
+
+void IncluirLinha(struct TVLinhas *linha,struct Gride *gride,char simbolo){
+     int linhainicial=linha->elementos[linha->Qtd].primeiroponto.y,colunainicial=linha->elementos[linha->Qtd].primeiroponto.x;
+     int linhafinal=linha->elementos[linha->Qtd].segundoponto.y,colunafinal=linha->elementos[linha->Qtd].segundoponto.x;
+     int i,j;
      
-         
+     for(i=linhainicial;i<=linhafinal;i++){
+      for(j=colunainicial;j<=colunafinal;j++){
+     gride->Grid[i][j]=simbolo;
+      }
+     }
 }
 
 void imprimeGride(struct Gride *gride){//lembrando que esta função somente irá imprimir!
