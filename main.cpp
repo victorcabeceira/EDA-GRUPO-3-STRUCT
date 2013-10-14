@@ -15,7 +15,7 @@ int menu_opcoes(){
     printf("\n3 - Incluir Linha\n");
     printf("\n4 - Excluir Linha\n");
     printf("\n5 - Incluir Triangulo\n");
-    printf("\n5 - Excluir Triangulo\n");
+    printf("\n6 - Excluir Triangulo\n");
     printf("\n7 - Incluir Retangulo\n");
     printf("\n8 - Excluir Retangulo\n");
     printf("\n9 - Sair\n\n");
@@ -37,6 +37,8 @@ main(){
     struct TVPontos pontos;
     struct Gride gride;
     struct TVLinhas linhas;
+    struct TVTriangulo triangulo;
+    struct TVRetangulo retangulo;
     //While para o menu
     while (opcao!=9){
         system("cls");
@@ -76,7 +78,7 @@ main(){
                     break;
                 }
             case 3:{
-                    if(pontos.Qtd >= 5 ){
+                    if(linhas.Qtd >= 5 ){
                         printf("Quantidade excedida!\n");
                         system("pause");
                     }
@@ -96,6 +98,7 @@ main(){
                         scanf("%c",&simbolo);
                         IncluirLinha(&linhas,&gride,simbolo);
                         linhas.Qtd ++;
+                        system("pause");
                     }            
 	       	  	 
                     break;
@@ -105,7 +108,26 @@ main(){
                     break;
                 }
             case 5:{
-              
+                    if(triangulo.Qtd >= 5 ){
+                        printf("Quantidade excedida!\n");
+                        system("pause");
+                    }
+                    else{
+                        printf("Digite as cordenadas de pico do seu triangulo:\n");
+                        printf("Coluna:\n");
+                        scanf("%d",&triangulo.elementos[triangulo.Qtd].ponto.x);
+                        printf("Linha:\n");
+                        scanf("%d",&triangulo.elementos[triangulo.Qtd].ponto.y);
+                        printf("Agora informe a altura:\n");
+                        scanf("%d",&triangulo.elementos[triangulo.Qtd].altura);
+                        fflush(stdin);
+                        printf("Digite o tipo do ponto:\n");
+                        scanf("%c",&simbolo);
+                        IncluirTriangulo(&triangulo,&gride,simbolo);
+                        triangulo.Qtd ++;
+                        system("pause");
+                    }            
+	       	  	 
                     break;
                 }
             case 6:{
@@ -113,9 +135,30 @@ main(){
                     break;
                 }
             case 7:{
-              
+                    if(retangulo.Qtd >= 5 ){
+                        printf("Quantidade excedida!\n");
+                        system("pause");
+                    }
+                    else{
+                        printf("Digite as cordenadas iniciais:\n");
+                        printf("Coluna:\n");
+                        scanf("%d",&retangulo.elementos[retangulo.Qtd].primeiroponto.x);
+                        printf("Linha:\n");
+                        scanf("%d",&retangulo.elementos[retangulo.Qtd].primeiroponto.y);
+                        printf("Digite as cordenadas finais:\n");
+                        printf("Coluna:\n");
+                        scanf("%d",&retangulo.elementos[retangulo.Qtd].segundoponto.x);
+                        printf("Linha:\n");
+                        scanf("%d",&retangulo.elementos[retangulo.Qtd].segundoponto.y);
+                        fflush(stdin);
+                        printf("Digite o tipo do ponto:\n");
+                        scanf("%c",&simbolo);
+                        IncluirRetangulo(&retangulo,&gride,simbolo);
+                        retangulo.Qtd ++;
+                        system("pause");
+                    }
                     break;
-                }
+              }
             case 8:{
               
                     break;
@@ -126,3 +169,4 @@ main(){
     printf("\nFim do Programa!\n\n");
     system("pause");
 }
+

@@ -54,12 +54,12 @@ struct TLinha{
     
 };
 struct TTriangulo{
-    struct TLinha linha;
+    struct TPonto ponto;
     int altura;
 };
 struct TRetangulo{
-    struct TLinha linha;
-    int x,y;
+    struct TPonto primeiroponto;
+    struct TPonto segundoponto;
 };
 
 struct TVPontos{
@@ -71,6 +71,16 @@ struct TVLinhas{
     struct TLinha elementos[5];         
     int Qtd;
     TVLinhas(){Qtd=0;}       
+};
+struct TVTriangulo{
+    struct TTriangulo elementos[5];
+    int Qtd;
+    TVTriangulo(){Qtd=0;}   
+};
+struct TVRetangulo{
+    struct TLinha elementos[5];         
+    int Qtd;
+    TVRetangulo(){Qtd=0;}       
 };
 
 void PlotarPonto(struct TVPontos *ponto, struct Gride *gride,char simbolo){
@@ -101,16 +111,70 @@ void ExcluirPonto(struct TVPontos *pontos,int cordenadas[],Gride *gride){
 void IncluirLinha(struct TVLinhas *linha,struct Gride *gride,char simbolo){
      int linhainicial=linha->elementos[linha->Qtd].primeiroponto.y,colunainicial=linha->elementos[linha->Qtd].primeiroponto.x;
      int linhafinal=linha->elementos[linha->Qtd].segundoponto.y,colunafinal=linha->elementos[linha->Qtd].segundoponto.x;
-     int i,j;
-     
+     int i,j,retorno=0;
+    if(linhainicial<=linhafinal && colunainicial<=colunafinal){
      for(i=linhainicial;i<=linhafinal;i++){
       for(j=colunainicial;j<=colunafinal;j++){
-      if(j==colunainicial || i == linhainicial){
-      gride->Grid[i][j]=simbolo;
-      }
+       if(j==i){
+       gride->Grid[i][j]=simbolo;
+       retorno=1;
+       }                                        
+       else if(j==colunainicial && retorno!= 1){
+       gride->Grid[i][j]=simbolo;
+       }
+       else if(i == linhainicial && retorno!= 1){
+       gride->Grid[i][j]=simbolo;
+       }
       }
      }
+    }
+    else if(linhainicial>linhafinal && colunainicial<colunafinal){
+    system("cls");
+    printf("Operacao nao permitida!\n");
+    }
+          
 }
+
+void IncluirTriangulo(struct TVTriangulo *triangulo,struct Gride *gride,char simbolo){
+    int k, i;
+    for (k = 0; k < triangulo->elementos[triangulo->Qtd].altura; k++) {
+        for (i = k * (-1); i <= k; i++)
+            gride->Grid[triangulo->elementos[triangulo->Qtd].ponto.y + k][triangulo->elementos[triangulo->Qtd].ponto.x + i] = simbolo;
+    }
+}
+
+void IncluirRetangulo(struct TVRetangulo *retangulo,struct Gride *gride,char simbolo){
+     int linhainicial=retangulo->elementos[retangulo->Qtd].primeiroponto.y,colunainicial=retangulo->elementos[retangulo->Qtd].primeiroponto.x;
+     int linhafinal=retangulo->elementos[retangulo->Qtd].segundoponto.y,colunafinal=retangulo->elementos[retangulo->Qtd].segundoponto.x;
+     int i,j;
+    if(linhainicial<=linhafinal && colunainicial<=colunafinal){
+     for(i=linhainicial;i<=linhafinal;i++){
+      for(j=colunainicial;j<=colunafinal;j++){
+       if(j==colunainicial || i == linhainicial){
+       gride->Grid[i][j]=simbolo;
+       }
+       if(j==colunafinal || i == linhafinal){
+       gride->Grid[i][j]=simbolo;
+       }
+      }
+     }
+    }
+    else if(linhainicial>linhafinal && colunainicial<colunafinal){
+    for(i=linhainicial;i>linhafinal;i--){
+      for(j=colunainicial;j<colunafinal;j++){
+       if(j==colunainicial || i == linhainicial){
+       gride->Grid[i][j]=simbolo;
+       }
+       if(j==colunafinal || i == linhafinal){
+       gride->Grid[i][j]=simbolo;
+       }
+      }
+     }
+    }
+    }
+       
+
+
 
 void imprimeGride(struct Gride *gride){//lembrando que esta função somente irá imprimir!
     int i,j;
@@ -118,7 +182,7 @@ void imprimeGride(struct Gride *gride){//lembrando que esta função somente irá i
          
     for(i=0;i<tamanhoGride;i++){
         for(j=0;j<tamanhoGride;j++){
-            if(i==0 && j==0){printf("0  ");}                            
+            if(i==0 && j==0){printf("0 ");}                            
             else if(i==0){
                 if(j>9){printf("%d ",j);} //maior que 9 pois acima disso será 2 algorismos,quebrando a formatação      
                 else{printf(" %d ",j);}
