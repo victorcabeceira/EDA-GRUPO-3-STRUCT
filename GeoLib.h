@@ -89,7 +89,7 @@ void imprimeGride(struct Gride *gride){//lembrando que esta função somente irá i
             }
             else{
             
-            printf("  %c ",gride->Grid[i][j]);
+            printf(" %c ",gride->Grid[i][j]);
             }
             }
           printf("\n");                     
