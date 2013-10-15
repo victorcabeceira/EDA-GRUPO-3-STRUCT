@@ -2,7 +2,7 @@
     #include<stdlib.h>
     #include "GeoLib.h"
 
-#define tamanhoGride 20//tamanho teste
+#define tamanhoGride 31//tamanho teste
 
 //Funcao do Menu de Opções
 int menu_opcoes(){
@@ -67,14 +67,19 @@ main(){
 	       	  	 
                     break;
                 }
-            case 2:{
-                    printf("Informe as cordenadas do inicio da sua linha:\n");
-                    printf("Coluna:\n");
-                    scanf("%d",&cordenadas[0]);
-                    printf("Linha:\n");
-                    scanf("%d",&cordenadas[1]);
-                    ExcluirPonto(&pontos,cordenadas,&gride);
-                    system("pause");
+            case 2:{if (pontos.Qtd == 0) {
+                        printf("Nao ha Nenhum ponto!!!");
+                        getch();
+                    }else{
+                        MostraPontos(&pontos);
+                        printf("\nInforme as cordenadas do seu ponto:\n");
+                        printf("Coluna:\n");
+                        scanf("%d",&cordenadas[0]);
+                        printf("Linha:\n");
+                        scanf("%d",&cordenadas[1]);
+                        ExcluirPonto(&pontos,cordenadas,&gride);
+                        system("pause");
+                    }
                     break;
                 }
             case 3:{
@@ -93,6 +98,13 @@ main(){
                         scanf("%d",&linhas.elementos[linhas.Qtd].segundoponto.x);
                         printf("Linha:\n");
                         scanf("%d",&linhas.elementos[linhas.Qtd].segundoponto.y);
+                        while(linhas.elementos[linhas.Qtd].primeiroponto.x > linhas.elementos[linhas.Qtd].segundoponto.x || linhas.elementos[linhas.Qtd].primeiroponto.y > linhas.elementos[linhas.Qtd].segundoponto.y){
+                        printf("Digite novamente:\n");
+                        printf("Coluna:\n");
+                        scanf("%d",&linhas.elementos[linhas.Qtd].segundoponto.x);
+                        printf("Linha:\n");
+                        scanf("%d",&linhas.elementos[linhas.Qtd].segundoponto.y);
+                        }
                         fflush(stdin);
                         printf("Digite o tipo do ponto:\n");
                         scanf("%c",&simbolo);
@@ -103,8 +115,25 @@ main(){
 	       	  	 
                     break;
                 }
-            case 4:{
-			  
+            case 4:{if (linhas.Qtd == 0) {
+                        printf("Nao ha Nenhuma linha!!!");
+                        getch();
+                    }else{
+                        MostraLinhas(&linhas);
+                        printf("\nInforme as cordenadas da sua linha:\n");
+                        printf("Coluna:\n");
+                        scanf("%d",&cordenadas[0]);
+                        printf("Linha:\n");
+                        scanf("%d",&cordenadas[1]);
+                        printf("Coluna:\n");
+                        scanf("%d",&cordenadas[2]);
+                        printf("Linha:\n");
+                        scanf("%d",&cordenadas[3]);
+                    
+                        ExcluirLinha(&linhas,cordenadas,&gride);
+                    }
+                    
+                    system("pause");
                     break;
                 }
             case 5:{
@@ -113,7 +142,7 @@ main(){
                         system("pause");
                     }
                     else{
-                        printf("Digite as cordenadas de pico do seu triangulo:\n");
+                        printf("Digite as cordenadas do pico do seu triangulo:\n");
                         printf("Coluna:\n");
                         scanf("%d",&triangulo.elementos[triangulo.Qtd].ponto.x);
                         printf("Linha:\n");
@@ -158,7 +187,7 @@ main(){
                         system("pause");
                     }
                     break;
-              }
+                }
             case 8:{
               
                     break;
