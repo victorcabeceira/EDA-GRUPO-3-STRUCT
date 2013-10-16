@@ -10,42 +10,62 @@
 //Alocaremos ponteiros do tipo char, i e j são inteiros com a dimensão da matriz
 
 char **Alocar(int i,int j){
-	
+
     int cont;
     char **PontMat; //Ponteiro para a matriz
-	
+
     //Alocando
     PontMat=(char**)malloc(i*sizeof(char*));    //É importante observar que temos aqui uma alocação de duas dimensões
-    /*if(PontMat == NULL){
+    if(!PontMat){
 	   	ERRO;
 	   	return (NULL);
-	   }*/
+    }
     //Colunas
     for(cont=0;cont<j;cont++){
         PontMat[cont]=(char*)malloc(j*sizeof(char));  //Para cada linha vamos alocar colunas
-        /*if(PontMat[cont] == NULL){
+        if(!PontMat[cont]){
 	     	   	ERRO;
 	     	   	return (NULL);
-	     	   }*/
-    }
-	
+
+        }
+
     //Retornando o ponteiro da matriz criada
     return(PontMat);
-	
-}
 
+}
+//Função para desalocar
+char **desalocar(int i,int j){
+ int cont;
+     if (PontMat==NULL){
+        return (NULL);
+     }
+    //Alocando
+
+    if(!PontMat){
+	   	ERRO;
+	   	return (NULL);
+    }
+    //Desalocando as linhas
+    for(cont=0;cont<i;cont++){
+        free PontMat[cont]; //Para cada linha vamos alocar colunas
+    }
+    //Liberando a outra dimensão do ponteiro
+    free (PontMat);
+    //Retornando o ponteiro nulo
+    return(NULL);
+}
 //Parte 2: Criação do Gride
 struct Gride {
-    int QX, QY; //QX: unidades do eixo X (colunas), QY: unidades do eixo Y (linhas).
+    int colunas, linhas; //unidades do eixo X (colunas),  unidades do eixo Y (linhas).
     char **Grid;
-    Gride(int pQX = 60, int pQY = 30){   
-        QX = pQX;                          //60 Colunas e 30 linhas
-        QY = pQY;
-        Grid = Alocar(QY, QX);            //Alocar com 30 e 60
+    Gride(int pColunas = 60, int pLinhas = 30){
+        colunas = pColunas;                          //60 Colunas e 30 linhas
+        linhas = pLinhas;
+        Grid = Alocar(linhas, colunas);            //Alocar com 30 e 60
         //Preencher o gride com pontos
-		for (int py = 0; py < QY; py++)    
-            for (int px = 0; px < QX; px++)
-                Grid[py][px] = '.';
+		for (int contY = 0; cont < linhas; contY++)
+            for (int contX = 0; contX < QX; contX++)
+                Grid[contY][contX] = '.';
     }
 };
 
@@ -57,7 +77,7 @@ struct TPonto{
 struct TLinha{
     struct TPonto primeiroponto;
     struct TPonto segundoponto;
-    
+
 };
 //Estrutura para linha que se baseia em Tponto
 struct TTriangulo{
@@ -70,27 +90,27 @@ struct TRetangulo{
 };
 
 struct TVPontos{
-    struct TPonto elementos[5];         
+    struct TPonto elementos[5];
     int Qtd;
-    TVPontos(){Qtd=0;}       
+    TVPontos(){Qtd=0;}
 };
 struct TVLinhas{
-    struct TLinha elementos[5];         
+    struct TLinha elementos[5];
     int Qtd;
-    TVLinhas(){Qtd=0;}       
+    TVLinhas(){Qtd=0;}
 };
 struct TVTriangulo{
     struct TTriangulo elementos[5];
     int Qtd;
-    TVTriangulo(){Qtd=0;}   
+    TVTriangulo(){Qtd=0;}
 };
 struct TVRetangulo{
-    struct TLinha elementos[5];         
+    struct TLinha elementos[5];
     int Qtd;
-    TVRetangulo(){Qtd=0;}       
+    TVRetangulo(){Qtd=0;}
 };
 
-//Procedimento para mostrar os pontos 
+//Procedimento para mostrar os pontos
 void MostraPontos(TVPontos *ppontos) {
     int pind;  //Contador
     system("cls"); //Limpa a tela
@@ -125,35 +145,35 @@ void MostraRetangulos(TVRetangulo *pretangulos) {
     system("cls"); //Limpa a tela
     for (pind = 0; pind < pretangulos->Qtd; pind++) {
         printf("Retangulo %d: Ponto(%d, %d) a", pind, pretangulos->elementos[pind].primeiroponto.x, pretangulos->elementos[pind].primeiroponto.y);
-        printf("Ponto(%d, %d)",pretangulos->elementos[pind].segundoponto.x,pretangulos->elementos[pind].segundoponto.y);   
+        printf("Ponto(%d, %d)",pretangulos->elementos[pind].segundoponto.x,pretangulos->elementos[pind].segundoponto.y);
     }
     printf("\n");
 }
 
 
 void PlotarPonto(struct TVPontos *ponto, struct Gride *gride,char simbolo){
-                   
+
     gride->Grid[ponto->elementos[ponto->Qtd].y][ponto->elementos[ponto->Qtd].x]=simbolo;
 
 }
 void ExcluirPonto(struct TVPontos *pontos,int cordenadas[],Gride *gride){
     int i,j,retorno = 0;
-    
+
     for(i=0;i<pontos->Qtd;i++){
         if(cordenadas[0]==pontos->elementos[i].x && cordenadas[1]==pontos->elementos[i].y){
             gride->Grid[pontos->elementos[i].y][pontos->elementos[i].x]='.';
             pontos->elementos[i]=pontos->elementos[i+1];
-            pontos->Qtd--;  
+            pontos->Qtd--;
             printf("Exclusao efetuada com sucesso!\n");
             retorno =1;
         }
-     
+
     }
     if(retorno==0){
-     
-        printf("Ponto nao encontrado!\n");    
+
+        printf("Ponto nao encontrado!\n");
     }
- 
+
 }
 void IncluirLinha(struct TVLinhas *linha,struct Gride *gride,char simbolo){
     int linhainicial=linha->elementos[linha->Qtd].primeiroponto.y,colunainicial=linha->elementos[linha->Qtd].primeiroponto.x;
@@ -165,7 +185,7 @@ void IncluirLinha(struct TVLinhas *linha,struct Gride *gride,char simbolo){
                 /*if(j==i){
        gride->Grid[i][j]=simbolo;
        retorno=1;
-       } */                                       
+       } */
                 if(j==colunainicial){
                     gride->Grid[i][j]=simbolo;
                 }
@@ -179,16 +199,16 @@ void IncluirLinha(struct TVLinhas *linha,struct Gride *gride,char simbolo){
         system("cls");
         printf("Operacao nao permitida!\n");
     }
-          
+
 }
 
 void ExcluirLinha(struct TVLinhas *linhas,int cordenadas[],Gride *gride){
     int k,i,j,retorno = 0;
-    
+
     for(k=0;k< linhas->Qtd;k++){
-        if((cordenadas[0]==linhas->elementos[k].primeiroponto.x && cordenadas[1]==linhas->elementos[k].primeiroponto.y)&&(cordenadas[2]==linhas->elementos[k].segundoponto.x && cordenadas[3]==linhas->elementos[k].segundoponto.y))                                          
-        {  
-            
+        if((cordenadas[0]==linhas->elementos[k].primeiroponto.x && cordenadas[1]==linhas->elementos[k].primeiroponto.y)&&(cordenadas[2]==linhas->elementos[k].segundoponto.x && cordenadas[3]==linhas->elementos[k].segundoponto.y))
+        {
+
             for(i=linhas->elementos[k].primeiroponto.x;i <= linhas->elementos[k].segundoponto.x;i++){
                 for(j=linhas->elementos[k].primeiroponto.y;j <= linhas->elementos[k].segundoponto.y;j++){
                     if(j==linhas->elementos[k].primeiroponto.y){
@@ -200,22 +220,22 @@ void ExcluirLinha(struct TVLinhas *linhas,int cordenadas[],Gride *gride){
                     printf("teste");
                 }
             }
-             
+
             gride->Grid[linhas->elementos[k].primeiroponto.y][linhas->elementos[k].primeiroponto.x]='.';
-            
-             
+
+
             linhas->elementos[i]=linhas->elementos[i+1];
-            linhas->Qtd--;  
+            linhas->Qtd--;
             printf("Exclusao efetuada com sucesso!\n");
             retorno =1;
         }}
-     
-    
+
+
     if(retorno==0){
-     
-        printf("Ponto nao encontrado!\n");    
+
+        printf("Ponto nao encontrado!\n");
     }
- 
+
 }
 void IncluirTriangulo(struct TVTriangulo *triangulo,struct Gride *gride,char simbolo){
     int k, i;
@@ -254,31 +274,31 @@ void IncluirRetangulo(struct TVRetangulo *retangulo,struct Gride *gride,char sim
         }
     }
 }
-       
+
 
 
 
 void imprimeGride(struct Gride *gride){//lembrando que esta função somente irá imprimir!
     int i,j;
-    
-         
+
+
     for(i=0;i<tamanhoGride;i++){
         for(j=0;j<tamanhoGride;j++){
-            if(i==0 && j==0){printf("0 ");}                            
+            if(i==0 && j==0){printf("0 ");}
             else if(i==0){
-                if(j>9){printf("%d ",j);} //maior que 9 pois acima disso será 2 algorismos,quebrando a formatação      
+                if(j>9){printf("%d ",j);} //maior que 9 pois acima disso será 2 algorismos,quebrando a formatação
                 else{printf(" %d ",j);}
             }
             else if(j==0){
-                if(i>9){printf("%d",i);} //maior que 9 pois acima disso será 2 algorismos,quebrando a formatação    
+                if(i>9){printf("%d",i);} //maior que 9 pois acima disso será 2 algorismos,quebrando a formatação
                 else{printf("%d ",i);}
             }
             else{
-                       
+
                 printf(" %c ",gride->Grid[i][j]);
             }
         }
-        printf("\n");                     
+        printf("\n");
     }
 
 }
