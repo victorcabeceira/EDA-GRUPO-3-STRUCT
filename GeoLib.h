@@ -2,7 +2,7 @@
     #include <stdlib.h>
     #include <string>
     #include <conio.h>
-    #define ERRO printf("\nErro!\n")
+    #define ERRO printf("\nErro!\n")  //Macro definindo a mensagem de erro
     #define tamanhoGride 31
 
 //Parte 1: Alocação dinamica
@@ -34,28 +34,32 @@ char **Alocar(int i,int j){
 	
 }
 
-//Parte 2 Criação do Gride
+//Parte 2: Criação do Gride
 struct Gride {
     int QX, QY; //QX: unidades do eixo X (colunas), QY: unidades do eixo Y (linhas).
     char **Grid;
-    Gride(int pQX = 60, int pQY = 30){
-        QX = pQX;
+    Gride(int pQX = 60, int pQY = 30){   
+        QX = pQX;                          //60 Colunas e 30 linhas
         QY = pQY;
-        Grid = Alocar(QY, QX);
-        for (int py = 0; py < QY; py++)   
+        Grid = Alocar(QY, QX);            //Alocar com 30 e 60
+        //Preencher o gride com pontos
+		for (int py = 0; py < QY; py++)    
             for (int px = 0; px < QX; px++)
                 Grid[py][px] = '.';
     }
 };
 
+//Estrutura para ponto
 struct TPonto{
     int x,y;
 };
+//Estrutura para linha que se baseia em Tponto
 struct TLinha{
     struct TPonto primeiroponto;
     struct TPonto segundoponto;
     
 };
+//Estrutura para linha que se baseia em Tponto
 struct TTriangulo{
     struct TPonto ponto;
     int altura;
