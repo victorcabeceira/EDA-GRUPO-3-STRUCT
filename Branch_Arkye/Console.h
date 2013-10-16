@@ -210,7 +210,7 @@ void iTriangulo(struct TVTriangulos &triangulos)
 		int neg_alt=0, neg_larg=0;
 		printf("Digite a coordenada da base do Triangulo em par ordenado (separados por um espa%co):\n", 135);
 		printf("Exemplo: 30 14\n");
-		scanf("%d %d", &triangulo.Ponto1.x, &triangulo.Ponto1.y);
+		scanf("%d %d", &triangulo.Linha1.Ponto1.x, &triangulo.Linha1.Ponto1.y);
 		fflush(stdin);
 		printf("Digite a altura do Triangulo:\n");
 		printf("Exemplo: 17\n");
@@ -251,7 +251,7 @@ void eTriangulo(struct TVTriangulos &triangulos)
 		system("cls");
 		printf("[C%cdigo do Triangulo]:(Coordenada Base X, Coordenada Base Y)(Altura(Positivo ou Negativo))(Largura(Positivo ou Negativo)) = S%cmbolo do Triangulo\n", 162, 161);
 		for (i = 0; i < triangulos.Qtde; i++)
-			printf("[%d]:(%d, %d)(%d(%d))(%d(%d)) = %c \n", i+1, triangulos.Elementos[i].Ponto1.x, triangulos.Elementos[i].Ponto1.y, triangulos.Elementos[i].alt, triangulos.Elementos[i].neg_alt, triangulos.Elementos[i].larg, triangulos.Elementos[i].neg_larg, triangulos.Elementos[i].Ponto1.simb);
+			printf("[%d]:(%d, %d)(%d(%d))(%d(%d)) = %c \n", i+1, triangulos.Elementos[i].Linha1.Ponto1.x, triangulos.Elementos[i].Linha1.Ponto1.y, triangulos.Elementos[i].alt, triangulos.Elementos[i].neg_alt, triangulos.Elementos[i].larg, triangulos.Elementos[i].neg_larg, triangulos.Elementos[i].Linha1.Ponto1.simb);
 		printf("Insira o c%cdigo do Triangulo que deseja excluir:\n", 162);
 		printf("Exemplo: 2\n");
 		scanf("%d", &codigo);
@@ -259,18 +259,33 @@ void eTriangulo(struct TVTriangulos &triangulos)
 		if((codigo>0)&&(codigo<=triangulos.Qtde))
 		{
 			TPonto *Aux;
-			Aux = triangulos.Elementos[codigo-1].Ponto1.Prox;
+			Aux = triangulos.Elementos[codigo-1].Linha1.Ponto1.Prox;
 			while(Aux->Prox->Prox!=NULL)
 				Aux = ExcluiCalda(Aux);
 			if(Aux->Prox->Prox==NULL)
 			{
 				free(Aux->Prox);
 				free(Aux);
-				triangulos.Elementos[codigo-1].Ponto1.Prox = NULL;
+				triangulos.Elementos[codigo-1].Linha1.Ponto1.Prox = NULL;
 			}
-			triangulos.Elementos[codigo-1].Ponto1.x = 40;
-			triangulos.Elementos[codigo-1].Ponto1.y = 40;
-			triangulos.Elementos[codigo-1].Ponto1.simb = ',';
+			triangulos.Elementos[codigo-1].Linha1.Ponto1.x = 40;
+			triangulos.Elementos[codigo-1].Linha1.Ponto1.y = 40;
+			triangulos.Elementos[codigo-1].Linha1.Ponto1.simb = ',';
+			triangulos.Elementos[codigo-1].Linha2.Ponto1.x = 40;
+			triangulos.Elementos[codigo-1].Linha2.Ponto1.y = 40;
+			triangulos.Elementos[codigo-1].Linha2.Ponto1.simb = ',';
+			triangulos.Elementos[codigo-1].Linha3.Ponto1.x = 40;
+			triangulos.Elementos[codigo-1].Linha3.Ponto1.y = 40;
+			triangulos.Elementos[codigo-1].Linha3.Ponto1.simb = ',';
+			triangulos.Elementos[codigo-1].Linha1.Ponto2.x = 40;
+			triangulos.Elementos[codigo-1].Linha1.Ponto2.y = 40;
+			triangulos.Elementos[codigo-1].Linha1.Ponto2.simb = ',';
+			triangulos.Elementos[codigo-1].Linha2.Ponto2.x = 40;
+			triangulos.Elementos[codigo-1].Linha2.Ponto2.y = 40;
+			triangulos.Elementos[codigo-1].Linha2.Ponto2.simb = ',';
+			triangulos.Elementos[codigo-1].Linha3.Ponto2.x = 40;
+			triangulos.Elementos[codigo-1].Linha3.Ponto2.y = 40;
+			triangulos.Elementos[codigo-1].Linha3.Ponto2.simb = ',';			
 			triangulos.Elementos[codigo-1].alt = 0;
 			triangulos.Elementos[codigo-1].neg_alt = 0;
 			triangulos.Elementos[codigo-1].larg = 0;
@@ -303,13 +318,13 @@ void iRetangulo(struct TVRetangulos &retangulos)
 		char simbolo;
 		printf("Digite a coordenada do primeiro ponto em par ordenado (separados por um espa%co):\n", 135);
 		printf("Exemplo: 30 14\n");
-		scanf("%d %d", &retangulo.Ponto1.x, &retangulo.Ponto1.y);
+		scanf("%d %d", &retangulo.Linha1.Ponto1.x, &retangulo.Linha1.Ponto1.y);
 		fflush(stdin);
 		printf("Digite a coordenada do segundo ponto em par ordenado (separados por um espa%co):\n", 135);
 		printf("Exemplo: 6 12\n");
-		scanf("%d %d", &retangulo.Ponto2.x, &retangulo.Ponto2.y);
+		scanf("%d %d", &retangulo.Linha2.Ponto1.x, &retangulo.Linha2.Ponto1.y);
 		fflush(stdin);
-		if((retangulo.Ponto1.x == retangulo.Ponto2.x)or(retangulo.Ponto1.y == retangulo.Ponto2.y))
+		if((retangulo.Linha1.Ponto1.x == retangulo.Linha2.Ponto1.x)or(retangulo.Linha1.Ponto1.y == retangulo.Linha2.Ponto1.y))
 		{
 			printf("\nNao %c possivel gerar retangulos com pontos na mesma linha/coluna!\n", 130);
 			system("PAUSE");
@@ -338,7 +353,7 @@ void eRetangulo(struct TVRetangulos &retangulos)
 		system("cls");
 		printf("[C%cdigo do Retangulo]:(Coordenada Ponto 1 X, Coordenada Ponto Y)(Coordenada Ponto 2 X, Coordenada Ponto 2 Y) = S%cmbolo do Retangulo\n", 162, 161);
 		for (i = 0; i < retangulos.Qtde; i++)
-			printf("[%d]:(%d, %d)(%d, %d) = %c \n", i+1, retangulos.Elementos[i].Ponto1.x, retangulos.Elementos[i].Ponto1.y, retangulos.Elementos[i].Ponto2.x, retangulos.Elementos[i].Ponto2.y, retangulos.Elementos[i].Ponto1.simb);
+			printf("[%d]:(%d, %d)(%d, %d) = %c \n", i+1, retangulos.Elementos[i].Linha1.Ponto1.x, retangulos.Elementos[i].Linha1.Ponto1.y, retangulos.Elementos[i].Linha2.Ponto1.x, retangulos.Elementos[i].Linha2.Ponto1.y, retangulos.Elementos[i].Linha1.Ponto1.simb);
 		printf("Insira o c%cdigo do Retangulo que deseja excluir:\n", 162);
 		printf("Exemplo: 2\n");
 		scanf("%d", &codigo);
@@ -346,21 +361,27 @@ void eRetangulo(struct TVRetangulos &retangulos)
 		if((codigo>0)&&(codigo<=retangulos.Qtde))
 		{
 			TPonto *Aux;
-			Aux = retangulos.Elementos[codigo-1].Ponto1.Prox;
+			Aux = retangulos.Elementos[codigo-1].Linha1.Ponto1.Prox;
 			while(Aux->Prox->Prox!=NULL)
 				Aux = ExcluiCalda(Aux);
 			if(Aux->Prox->Prox==NULL)
 			{
 				free(Aux->Prox);
 				free(Aux);
-				retangulos.Elementos[codigo-1].Ponto1.Prox = NULL;
+				retangulos.Elementos[codigo-1].Linha1.Ponto1.Prox = NULL;
 			}
-			retangulos.Elementos[codigo-1].Ponto1.x = 40;
-			retangulos.Elementos[codigo-1].Ponto1.y = 40;
-			retangulos.Elementos[codigo-1].Ponto1.simb = ',';
-			retangulos.Elementos[codigo-1].Ponto2.x = 40;
-			retangulos.Elementos[codigo-1].Ponto2.y = 40;
-			retangulos.Elementos[codigo-1].Ponto2.simb = ',';
+			retangulos.Elementos[codigo-1].Linha1.Ponto1.x = 40;
+			retangulos.Elementos[codigo-1].Linha1.Ponto1.y = 40;
+			retangulos.Elementos[codigo-1].Linha1.Ponto1.simb = ',';
+			retangulos.Elementos[codigo-1].Linha1.Ponto2.x = 40;
+			retangulos.Elementos[codigo-1].Linha1.Ponto2.y = 40;
+			retangulos.Elementos[codigo-1].Linha1.Ponto2.simb = ',';
+			retangulos.Elementos[codigo-1].Linha2.Ponto1.x = 40;
+			retangulos.Elementos[codigo-1].Linha2.Ponto1.y = 40;
+			retangulos.Elementos[codigo-1].Linha2.Ponto1.simb = ',';
+			retangulos.Elementos[codigo-1].Linha2.Ponto2.x = 40;
+			retangulos.Elementos[codigo-1].Linha2.Ponto2.y = 40;
+			retangulos.Elementos[codigo-1].Linha2.Ponto2.simb = ',';			
 			for(i = codigo-1; i < retangulos.Qtde; i++)
 				retangulos.Elementos[i] = retangulos.Elementos[i+1];
 			retangulos.Qtde--;
