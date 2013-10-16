@@ -33,16 +33,16 @@ main(){
     system("color f1");    
     //Declaração de Variaveis
     int opcao,cordenadas[4];
-    char simbolo;
-    struct TVPontos pontos;
-    struct Gride gride;
+    char simbolo;   //Simbolo a ser inserido
+    struct TVPontos pontos; //Essa Struct contem os pontos digitados
+    struct Gride gride;      //Gride Com os pontos
     struct TVLinhas linhas;
     struct TVTriangulo triangulo;
     struct TVRetangulo retangulo;
     //While para o menu
     while (opcao!=9){
         system("cls");
-        imprimeGride(&gride);
+        imprimeGride(&gride);  //Será mostrado o gride 
         printf("\n================================Plotagem de Figuras=============================\n\n");
         opcao=menu_opcoes(); //Chama a função menu_opcoes
         system ("cls");
@@ -55,7 +55,7 @@ main(){
                     else{
                         printf("Digite as cordenadas:\n");
                         printf("Coluna:\n");
-                        scanf("%d",&pontos.elementos[pontos.Qtd].x);
+                        scanf("%d",&pontos.elementos[pontos.Qtd].x);   //Coordenada x guardada
                         printf("Linha:\n");
                         scanf("%d",&pontos.elementos[pontos.Qtd].y);
                         fflush(stdin);
@@ -105,11 +105,11 @@ main(){
                         printf("Linha:\n");
                         scanf("%d",&linhas.elementos[linhas.Qtd].segundoponto.y);
                         }
-                        fflush(stdin);
+                        fflush(stdin);  //Limpar buffer do teclado
                         printf("Digite o tipo do ponto:\n");
                         scanf("%c",&simbolo);
                         IncluirLinha(&linhas,&gride,simbolo);
-                        linhas.Qtd ++;
+                        linhas.Qtd ++;   //Incrementa a quantidade de linhas inseridas
                         system("pause");
                     }            
 	       	  	 
@@ -153,7 +153,7 @@ main(){
                         printf("Digite o tipo do ponto:\n");
                         scanf("%c",&simbolo);
                         IncluirTriangulo(&triangulo,&gride,simbolo);
-                        triangulo.Qtd ++;
+                        triangulo.Qtd ++; //Aumenta a quantidade de triangulos inseridos
                         system("pause");
                     }            
 	       	  	 
@@ -191,9 +191,8 @@ main(){
             case 8:{
               
                     break;
-                }
-        }//Fim do Switch
-    }//Fim do While
+                }//Fim do Switch
+        }//Fim do While
 
     printf("\nFim do Programa!\n\n");
     system("pause");
