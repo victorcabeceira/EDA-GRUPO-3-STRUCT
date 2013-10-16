@@ -28,14 +28,20 @@ struct TPonto{
 
 // Linha
 struct TLinha{
-	struct TLinha *Ant;	
 	struct TPonto Ponto1;
 	struct TPonto Ponto2;
-	struct TLinha *Prox;
-	TLinha(){Ant=NULL, Ponto1=TPonto(), Ponto2=TPonto(), Prox=NULL;}
+	TLinha(){Ponto1=TPonto(), Ponto2=TPonto();}
 };
 
 // Triangulo
+struct TTriangulo{
+	struct TPonto Ponto1;
+	int alt;
+	int larg;
+	bool neg_alt;
+	bool neg_larg;
+	TTriangulo(){Ponto1=TPonto(), alt=0, larg=0, neg_alt=0, neg_larg=0;}
+};
 
 // Retangulo
 struct TRetangulo{
@@ -60,6 +66,11 @@ struct TVLinhas{
 };
 
 // Triangulos
+struct TVTriangulos{
+	struct TTriangulo Elementos[5];
+	int Qtde;
+	TVTriangulos(){Qtde = 0;}
+};
 
 // Retangulos
 struct TVRetangulos{
@@ -85,7 +96,7 @@ TPonto *IncluiCalda(TPonto *pLista, int x, int y, char psimbolo)
 }
 
 // Função para Atualizar o Grid
-void AtualizaGrafico(char grid[40][40], struct TVPontos &ppontos, struct TVLinhas &plinhas, struct TVRetangulos &prets)
+void AtualizaGrafico(char grid[40][40], struct TVPontos &ppontos, struct TVLinhas &plinhas, struct TVTriangulos &ptriangs, struct TVRetangulos &prets)
 {
 	int imp=0, k=0;
 	TPonto *Aux;
@@ -172,6 +183,44 @@ void AtualizaGrafico(char grid[40][40], struct TVPontos &ppontos, struct TVLinha
 					}					
 					
 					// Sequencia de Hierarquia 03: Plotando Triangulos
+					if(ptriangs.Qtde!=0)
+					{
+						for(k=0; k<ptriangs.Qtde; k++)
+						{
+							// Ponto 1
+							if(ptriangs.Elementos[k].Ponto1.x == i-1)
+							{
+								if(ptriangs.Elementos[k].Ponto1.y == j-1)
+								{
+									grid[i][j] = ptriangs.Elementos[k].Ponto1.simb;
+									imp++;
+									break;
+								}
+							}
+							// Nós
+							else
+							{
+								Aux = ptriangs.Elementos[k].Ponto1.Prox;
+								while(Aux != NULL)
+								{
+									if(Aux->x == i-1)
+									{
+										if(Aux->y == j-1)
+										{
+											grid[i][j] = Aux->simb;
+											imp++;
+											break;
+										}
+									}
+									Aux = Aux->Prox;
+								}
+							}
+						}
+						if(imp==0)
+							grid[i][j] = '.';
+						else
+							imp=0;
+					}					
 					
 					// Sequencia de Hierarquia 02: Plotando Linhas
 					if(plinhas.Qtde!=0)
@@ -242,7 +291,8 @@ void AtualizaGrafico(char grid[40][40], struct TVPontos &ppontos, struct TVLinha
 						else
 							imp=0;
 					}
-					else if((ppontos.Qtde==0)&&(plinhas.Qtde==0)&&(prets.Qtde==0))
+					
+					if((ppontos.Qtde==0)&&(plinhas.Qtde==0)&&(ptriangs.Qtde==0)&&(prets.Qtde==0))
 						grid[i][j] = '.';
 						
 					printf(" %c ", grid[i][j]);
@@ -339,6 +389,141 @@ void PlotaLinha(struct TVLinhas &linhas, struct TLinha &ptr, char psimbolo)
 	linhas.Elementos[linhas.Qtde].Ponto2.simb = psimbolo;
 	linhas.Qtde++;
 }
+// Função para adicionar o Triangulo no Conjunto de Triangulos
+void PlotaTriangulo(struct TVTriangulos &triangulos, struct TTriangulo &ptr, char psimbolo)
+{
+	float a = 0, b = 0, sX=0, sX2=0, sY=0, sXY=0, tX=0;
+	int maxY = 0, y=0, t=0, x=0, minY =0, i=0, antX=0, tY=0, tX2=0;
+	TPonto *pPonto;
+	pPonto = (TPonto *) malloc(sizeof(TPonto));
+	pPonto = &ptr.Ponto1;
+	
+	if(ptr.neg_alt==0)
+	{
+		if(ptr.neg_larg==0)
+		{
+			for(i=ptr.Ponto1.y;i>=(ptr.Ponto1.y-ptr.alt);i--)
+			{
+				pPonto = IncluiCalda(pPonto,ptr.Ponto1.x,i,psimbolo);
+			}
+			for(i=ptr.Ponto1.x;i>=(ptr.Ponto1.x-ptr.larg);i--)
+			{
+				pPonto = IncluiCalda(pPonto,i,ptr.Ponto1.y,psimbolo);
+			}
+			x = ptr.Ponto1.x - ptr.larg;
+			y = ptr.Ponto1.y - ptr.alt;
+		}
+		else
+		{
+			for(i=ptr.Ponto1.y;i>=(ptr.Ponto1.y-ptr.alt);i--)
+			{
+				pPonto = IncluiCalda(pPonto,ptr.Ponto1.x,i,psimbolo);
+			}
+			for(i=ptr.Ponto1.x;i<=ptr.Ponto1.x+ptr.larg;i++)
+			{
+				pPonto = IncluiCalda(pPonto,i,ptr.Ponto1.y,psimbolo);
+			}
+			x = ptr.Ponto1.x + ptr.larg;
+			y = ptr.Ponto1.y - ptr.alt;				
+		}
+	}
+	else
+	{
+		if(ptr.neg_larg==0)
+		{
+			for(i=ptr.Ponto1.y;i<=ptr.Ponto1.y+ptr.alt;i++)
+			{
+				pPonto = IncluiCalda(pPonto,ptr.Ponto1.x,i,psimbolo);
+			}
+			for(i=ptr.Ponto1.x;i>=ptr.Ponto1.x-ptr.larg;i--)
+			{
+				pPonto = IncluiCalda(pPonto,i,ptr.Ponto1.y,psimbolo);
+			}
+			x = ptr.Ponto1.x - ptr.larg;
+			y = ptr.Ponto1.y + ptr.alt;				
+		}
+		else
+		{
+			for(i = (ptr.Ponto1.y + 1) ; i <= (ptr.Ponto1.y + ptr.alt) ; i++)
+			{
+				pPonto = IncluiCalda(pPonto,ptr.Ponto1.x,i,psimbolo);
+			}
+			for(i = (ptr.Ponto1.x + 1) ; i <= (ptr.Ponto1.x + ptr.larg) ; i++)
+			{
+				pPonto = IncluiCalda(pPonto,i,ptr.Ponto1.y,psimbolo);
+			}
+			x = ptr.Ponto1.x + ptr.larg;
+			y = ptr.Ponto1.y + ptr.alt;
+		}
+	}
+	
+	// Calculo da Reta
+	sX = ptr.Ponto1.x + x;
+	sX2 = (ptr.Ponto1.x*ptr.Ponto1.x) + (x*x);
+	sY = ptr.Ponto1.y + y;
+	sXY = (ptr.Ponto1.x*ptr.Ponto1.y) + (x*y);
+	a = ((sX2*sY) - (sX*sXY))/((2*sX2) - (sX*sX));
+	b = ((2*sXY) - (sX*sY))/((2*sX2) - (sX*sX));
+	
+	// Calculo de ajuste de float para inteiro
+	if (ptr.Ponto1.y > y)
+	{
+		maxY = ptr.Ponto1.y;
+		minY = y;
+	}
+	else
+	{
+		maxY = y;
+		minY = ptr.Ponto1.y;
+	}
+	for(tY = (minY + 1); tY < maxY ; tY++)
+	{
+		antX = tX2;
+		tX = (tY - a)/b;
+		for(t=0;t<40;t++)
+		{
+			if(t==tX)
+				break;
+			if(t>tX)
+			{
+				if(tX-t-1 > t-tX)
+				{
+					tX=t;
+					break;
+				}
+				else
+				{
+					tX=t-1;
+					break;
+				}
+			}
+		}
+		tX2 = int(tX);
+		pPonto = IncluiCalda(pPonto,tX2,tY,psimbolo);
+		
+		if(antX!=0)
+		{
+			if(antX!=tX2)
+			{
+				if(antX>tX2+1)
+				{
+					for(i=antX;i>tX2;i--)
+						pPonto = IncluiCalda(pPonto,i,y,psimbolo);
+				}
+				else if(antX+1<tX2)
+				{
+					for(i=antX;i<tX2;i++)
+						pPonto = IncluiCalda(pPonto,i,y,psimbolo);
+				}
+			}
+		}	
+	}	
+	triangulos.Elementos[triangulos.Qtde].Ponto1.x = pPonto->x;
+	triangulos.Elementos[triangulos.Qtde].Ponto1.y = pPonto->y;
+	triangulos.Elementos[triangulos.Qtde].Ponto1.Prox = pPonto->Prox;
+	triangulos.Elementos[triangulos.Qtde].Ponto1.simb = psimbolo;
+	triangulos.Qtde++;	
+}
 
 // Função para adiconar o Retangulo no Conjunto de Retangulos
 void PlotaRetangulo(struct TVRetangulos &retangulos, struct TRetangulo &ptr, char psimbolo)
@@ -349,14 +534,14 @@ void PlotaRetangulo(struct TVRetangulos &retangulos, struct TRetangulo &ptr, cha
 	pPonto = &ptr.Ponto1;
 	if(ptr.Ponto1.x > ptr.Ponto2.x)
 	{
-		for(i=ptr.Ponto2.x;i<ptr.Ponto1.x;i++)
+		for(i=ptr.Ponto2.x;i<=ptr.Ponto1.x;i++)
 		{
 			pPonto = IncluiCalda(pPonto,i,ptr.Ponto1.y,psimbolo);
 			pPonto = IncluiCalda(pPonto,i,ptr.Ponto2.y,psimbolo);
 		}
 		if(ptr.Ponto1.y > ptr.Ponto2.y)
 		{	
-			for(i=ptr.Ponto2.y;i<ptr.Ponto1.y;i++)
+			for(i=ptr.Ponto2.y;i<=ptr.Ponto1.y;i++)
 			{
 				pPonto = IncluiCalda(pPonto,ptr.Ponto1.x,i,psimbolo);
 				pPonto = IncluiCalda(pPonto,ptr.Ponto2.x,i,psimbolo);
@@ -364,7 +549,7 @@ void PlotaRetangulo(struct TVRetangulos &retangulos, struct TRetangulo &ptr, cha
 		}
 		else
 		{	
-			for(i=ptr.Ponto1.y;i<ptr.Ponto2.y;i++)
+			for(i=ptr.Ponto1.y;i<=ptr.Ponto2.y;i++)
 			{
 				pPonto = IncluiCalda(pPonto,ptr.Ponto1.x,i,psimbolo);
 				pPonto = IncluiCalda(pPonto,ptr.Ponto2.x,i,psimbolo);
@@ -373,14 +558,14 @@ void PlotaRetangulo(struct TVRetangulos &retangulos, struct TRetangulo &ptr, cha
 	}
 	else
 	{
-		for(i=ptr.Ponto1.x;i<ptr.Ponto2.x;i++)
+		for(i=ptr.Ponto1.x;i<=ptr.Ponto2.x;i++)
 		{
 			pPonto = IncluiCalda(pPonto,i,ptr.Ponto1.y,psimbolo);
 			pPonto = IncluiCalda(pPonto,i,ptr.Ponto2.y,psimbolo);
 		}
 		if(ptr.Ponto1.y > ptr.Ponto2.y)
 		{	
-			for(i=ptr.Ponto2.y;i<ptr.Ponto1.y;i++)
+			for(i=ptr.Ponto2.y;i<=ptr.Ponto1.y;i++)
 			{
 				pPonto = IncluiCalda(pPonto,ptr.Ponto1.x,i,psimbolo);
 				pPonto = IncluiCalda(pPonto,ptr.Ponto2.x,i,psimbolo);
@@ -388,7 +573,7 @@ void PlotaRetangulo(struct TVRetangulos &retangulos, struct TRetangulo &ptr, cha
 		}
 		else
 		{	
-			for(i=ptr.Ponto1.y;i<ptr.Ponto2.y;i++)
+			for(i=ptr.Ponto1.y;i<=ptr.Ponto2.y;i++)
 			{
 				pPonto = IncluiCalda(pPonto,ptr.Ponto1.x,i,psimbolo);
 				pPonto = IncluiCalda(pPonto,ptr.Ponto2.x,i,psimbolo);

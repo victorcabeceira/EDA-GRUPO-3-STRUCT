@@ -10,6 +10,8 @@
  * void ePonto(TVPontos)
  * void iLinha(TVLinhas)
  * void eLinha(TVLinhas)
+ * void iRetangulo(TVRetangulos)
+ * void eRetangulo(TVRetangulos)
  * void SetWindow(int,int)
  */
  
@@ -154,10 +156,10 @@ void eLinha(struct TVLinhas &linhas)
 	{
 		int codigo=0, i = 0;
 		system("cls");
-		printf("[C%cdigo da Linha]:(Coordenada Ponto 1 X, Coordenada Ponto Y)(Coordenada Ponto 2 X, Coordenada Ponto 2 Y) = S%cmbolo do linha\n", 162, 161);
+		printf("[C%cdigo da Linha]:(Coordenada Ponto 1 X, Coordenada Ponto Y)(Coordenada Ponto 2 X, Coordenada Ponto 2 Y) = S%cmbolo da linha\n", 162, 161);
 		for (i = 0; i < linhas.Qtde; i++)
 			printf("[%d]:(%d, %d)(%d, %d) = %c \n", i+1, linhas.Elementos[i].Ponto1.x, linhas.Elementos[i].Ponto1.y, linhas.Elementos[i].Ponto2.x, linhas.Elementos[i].Ponto2.y, linhas.Elementos[i].Ponto1.simb);
-		printf("Insira o c%cdigo do ponto que deseja excluir:\n", 162);
+		printf("Insira o c%cdigo da Linha que deseja excluir:\n", 162);
 		printf("Exemplo: 2\n");
 		scanf("%d", &codigo);
 		fflush(stdin);
@@ -192,8 +194,99 @@ void eLinha(struct TVLinhas &linhas)
 	}
 }
 
-// Incluindo Triangulo
+// Inserindo um Triangulo
+void iTriangulo(struct TVTriangulos &triangulos)
+{
+	if(triangulos.Qtde == 5 )
+	{
+		printf("Nao %c possivel inserir mais triangulos!\n", 130);
+		printf("A quantidade m%cxima de 5 triangulos foi atingida!\n", 160);
+		system("pause");
+	}
+	else
+	{
+		struct TTriangulo triangulo;
+		char simbolo;
+		int neg_alt=0, neg_larg=0;
+		printf("Digite a coordenada da base do Triangulo em par ordenado (separados por um espa%co):\n", 135);
+		printf("Exemplo: 30 14\n");
+		scanf("%d %d", &triangulo.Ponto1.x, &triangulo.Ponto1.y);
+		fflush(stdin);
+		printf("Digite a altura do Triangulo:\n");
+		printf("Exemplo: 17\n");
+		scanf("%d", &triangulo.alt);
+		fflush(stdin);
+		printf("A altura %c positiva ou negativa?\n", 130);
+		printf("(1) - Positiva, (0) - Negativa\n");
+		scanf("%d", &neg_alt);
+		triangulo.neg_alt = neg_alt;
+		fflush(stdin);
+		printf("Digite a largura do Triangulo:\n");
+		printf("Exemplo: 5\n");
+		scanf("%d", &triangulo.larg);
+		fflush(stdin);
+		printf("A largura %c positiva ou negativa?\n", 130);
+		printf("(1) - Positiva, (0) - Negativa\n");
+		scanf("%d", &neg_larg);
+		triangulo.neg_larg = neg_larg;
+		fflush(stdin);
+		printf("Digite o s%cmbolo do retangulo:\n", 161);
+		scanf("%c",&simbolo);
+		fflush(stdin);
+		PlotaTriangulo(triangulos,triangulo,simbolo); // GeoLib.h
+	}
+}
+
 // Excluindo Triangulo
+void eTriangulo(struct TVTriangulos &triangulos)
+{
+	if(triangulos.Qtde == 0)
+	{
+		printf("Nao h%c triangulos para ser excluido!\n", 160);
+		system("pause");		
+	}
+	else
+	{
+		int codigo=0, i = 0;
+		system("cls");
+		printf("[C%cdigo do Triangulo]:(Coordenada Base X, Coordenada Base Y)(Altura(Positivo ou Negativo))(Largura(Positivo ou Negativo)) = S%cmbolo do Triangulo\n", 162, 161);
+		for (i = 0; i < triangulos.Qtde; i++)
+			printf("[%d]:(%d, %d)(%d(%d))(%d(%d)) = %c \n", i+1, triangulos.Elementos[i].Ponto1.x, triangulos.Elementos[i].Ponto1.y, triangulos.Elementos[i].alt, triangulos.Elementos[i].neg_alt, triangulos.Elementos[i].larg, triangulos.Elementos[i].neg_larg, triangulos.Elementos[i].Ponto1.simb);
+		printf("Insira o c%cdigo do Triangulo que deseja excluir:\n", 162);
+		printf("Exemplo: 2\n");
+		scanf("%d", &codigo);
+		fflush(stdin);
+		if((codigo>0)&&(codigo<=triangulos.Qtde))
+		{
+			TPonto *Aux;
+			Aux = triangulos.Elementos[codigo-1].Ponto1.Prox;
+			while(Aux->Prox->Prox!=NULL)
+				Aux = ExcluiCalda(Aux);
+			if(Aux->Prox->Prox==NULL)
+			{
+				free(Aux->Prox);
+				free(Aux);
+				triangulos.Elementos[codigo-1].Ponto1.Prox = NULL;
+			}
+			triangulos.Elementos[codigo-1].Ponto1.x = 40;
+			triangulos.Elementos[codigo-1].Ponto1.y = 40;
+			triangulos.Elementos[codigo-1].Ponto1.simb = ',';
+			triangulos.Elementos[codigo-1].alt = 0;
+			triangulos.Elementos[codigo-1].neg_alt = 0;
+			triangulos.Elementos[codigo-1].larg = 0;
+			triangulos.Elementos[codigo-1].neg_larg = 0;
+			for(i = codigo-1; i < triangulos.Qtde; i++)
+				triangulos.Elementos[i] = triangulos.Elementos[i+1];
+			triangulos.Qtde--;
+			printf("Triangulo [%d] excluido com sucesso!\n", codigo);
+		}
+		else
+		{
+			printf("C%cdigo incorreto!\n", 162);
+			system("pause");
+		}
+	}
+}
 
 // Inserindo um Retangulo
 void iRetangulo(struct TVRetangulos &retangulos)
@@ -231,6 +324,55 @@ void iRetangulo(struct TVRetangulos &retangulos)
 	}
 }
 
+// Excluindo um Retangulo
+void eRetangulo(struct TVRetangulos &retangulos)
+{
+	if(retangulos.Qtde == 0)
+	{
+		printf("Nao h%c retangulos para ser excluido!\n", 160);
+		system("pause");		
+	}
+	else
+	{
+		int codigo=0, i = 0;
+		system("cls");
+		printf("[C%cdigo do Retangulo]:(Coordenada Ponto 1 X, Coordenada Ponto Y)(Coordenada Ponto 2 X, Coordenada Ponto 2 Y) = S%cmbolo do Retangulo\n", 162, 161);
+		for (i = 0; i < retangulos.Qtde; i++)
+			printf("[%d]:(%d, %d)(%d, %d) = %c \n", i+1, retangulos.Elementos[i].Ponto1.x, retangulos.Elementos[i].Ponto1.y, retangulos.Elementos[i].Ponto2.x, retangulos.Elementos[i].Ponto2.y, retangulos.Elementos[i].Ponto1.simb);
+		printf("Insira o c%cdigo do Retangulo que deseja excluir:\n", 162);
+		printf("Exemplo: 2\n");
+		scanf("%d", &codigo);
+		fflush(stdin);
+		if((codigo>0)&&(codigo<=retangulos.Qtde))
+		{
+			TPonto *Aux;
+			Aux = retangulos.Elementos[codigo-1].Ponto1.Prox;
+			while(Aux->Prox->Prox!=NULL)
+				Aux = ExcluiCalda(Aux);
+			if(Aux->Prox->Prox==NULL)
+			{
+				free(Aux->Prox);
+				free(Aux);
+				retangulos.Elementos[codigo-1].Ponto1.Prox = NULL;
+			}
+			retangulos.Elementos[codigo-1].Ponto1.x = 40;
+			retangulos.Elementos[codigo-1].Ponto1.y = 40;
+			retangulos.Elementos[codigo-1].Ponto1.simb = ',';
+			retangulos.Elementos[codigo-1].Ponto2.x = 40;
+			retangulos.Elementos[codigo-1].Ponto2.y = 40;
+			retangulos.Elementos[codigo-1].Ponto2.simb = ',';
+			for(i = codigo-1; i < retangulos.Qtde; i++)
+				retangulos.Elementos[i] = retangulos.Elementos[i+1];
+			retangulos.Qtde--;
+			printf("Retangulo [%d] excluido com sucesso!\n", codigo);
+		}
+		else
+		{
+			printf("C%cdigo incorreto!\n", 162);
+			system("pause");
+		}
+	}
+}
 // Procedimento de Redimensionamento de Janela
 void SetWindow(int Width, int Height) 
 {
