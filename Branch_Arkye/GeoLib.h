@@ -35,6 +35,15 @@ struct TLinha{
 	TLinha(){Ant=NULL, Ponto1=TPonto(), Ponto2=TPonto(), Prox=NULL;}
 };
 
+// Triangulo
+
+// Retangulo
+struct TRetangulo{
+	struct TPonto Ponto1;
+	struct TPonto Ponto2;
+	TRetangulo(){Ponto1=TPonto(),Ponto2=TPonto();}
+};
+
 // Structs dos Conjuntos de Figuras Geométricas
 // Pontos
 struct TVPontos{
@@ -48,6 +57,15 @@ struct TVLinhas{
 	struct TLinha Elementos[5];
 	int Qtde;
 	TVLinhas(){Qtde = 0;}
+};
+
+// Triangulos
+
+// Retangulos
+struct TVRetangulos{
+	struct TRetangulo Elementos[5];
+	int Qtde;
+	TVRetangulos(){Qtde = 0;}
 };
 
 // Funções de Tratamento de Listas
@@ -67,7 +85,7 @@ TPonto *IncluiCalda(TPonto *pLista, int x, int y, char psimbolo)
 }
 
 // Função para Atualizar o Grid
-void AtualizaGrafico(char grid[40][40], struct TVPontos &ppontos, struct TVLinhas &plinhas)
+void AtualizaGrafico(char grid[40][40], struct TVPontos &ppontos, struct TVLinhas &plinhas, struct TVRetangulos &prets)
 {
 	int imp=0, k=0;
 	TPonto *Aux;
@@ -103,6 +121,58 @@ void AtualizaGrafico(char grid[40][40], struct TVPontos &ppontos, struct TVLinha
 					printf("\n\n");
 				else
 				{
+					// Senquencia de Hierarquia 04: Plotando Retangulos
+					if(prets.Qtde!=0)
+					{
+						for(k=0; k<prets.Qtde; k++)
+						{
+							// Ponto 1
+							if(prets.Elementos[k].Ponto1.x == i-1)
+							{
+								if(prets.Elementos[k].Ponto1.y == j-1)
+								{
+									grid[i][j] = prets.Elementos[k].Ponto1.simb;
+									imp++;
+									break;
+								}
+							}
+							// Nós
+							else
+							{
+								Aux = prets.Elementos[k].Ponto1.Prox;
+								while(Aux != NULL)
+								{
+									if(Aux->x == i-1)
+									{
+										if(Aux->y == j-1)
+										{
+											grid[i][j] = Aux->simb;
+											imp++;
+											break;
+										}
+									}
+									Aux = Aux->Prox;
+								}
+							}
+							// Ponto2
+							if(prets.Elementos[k].Ponto2.x == i-1)
+							{
+								if(prets.Elementos[k].Ponto2.y == j-1)
+								{
+									grid[i][j] = prets.Elementos[k].Ponto2.simb;
+									imp++;
+									break;
+								}
+							}
+						}
+						if(imp==0)
+							grid[i][j] = '.';
+						else
+							imp=0;
+					}					
+					
+					// Sequencia de Hierarquia 03: Plotando Triangulos
+					
 					// Sequencia de Hierarquia 02: Plotando Linhas
 					if(plinhas.Qtde!=0)
 					{
@@ -172,7 +242,7 @@ void AtualizaGrafico(char grid[40][40], struct TVPontos &ppontos, struct TVLinha
 						else
 							imp=0;
 					}
-					else if((ppontos.Qtde==0)&&(plinhas.Qtde==0))
+					else if((ppontos.Qtde==0)&&(plinhas.Qtde==0)&&(prets.Qtde==0))
 						grid[i][j] = '.';
 						
 					printf(" %c ", grid[i][j]);
@@ -191,6 +261,7 @@ void PlotaPonto(struct TVPontos &pontos, const struct TPonto &ptr, char psimbolo
 	pontos.Qtde++;
 }
 
+// Função para adicionar a Linha no Conjunto de Linhas
 void PlotaLinha(struct TVLinhas &linhas, struct TLinha &ptr, char psimbolo)
 {
 	// Variaveis Locais
@@ -267,4 +338,69 @@ void PlotaLinha(struct TVLinhas &linhas, struct TLinha &ptr, char psimbolo)
 	linhas.Elementos[linhas.Qtde].Ponto1.simb = psimbolo;
 	linhas.Elementos[linhas.Qtde].Ponto2.simb = psimbolo;
 	linhas.Qtde++;
+}
+
+// Função para adiconar o Retangulo no Conjunto de Retangulos
+void PlotaRetangulo(struct TVRetangulos &retangulos, struct TRetangulo &ptr, char psimbolo)
+{
+	int i=0;
+	TPonto *pPonto;
+	pPonto = (TPonto *) malloc(sizeof(TPonto));
+	pPonto = &ptr.Ponto1;
+	if(ptr.Ponto1.x > ptr.Ponto2.x)
+	{
+		for(i=ptr.Ponto2.x;i<ptr.Ponto1.x;i++)
+		{
+			pPonto = IncluiCalda(pPonto,i,ptr.Ponto1.y,psimbolo);
+			pPonto = IncluiCalda(pPonto,i,ptr.Ponto2.y,psimbolo);
+		}
+		if(ptr.Ponto1.y > ptr.Ponto2.y)
+		{	
+			for(i=ptr.Ponto2.y;i<ptr.Ponto1.y;i++)
+			{
+				pPonto = IncluiCalda(pPonto,ptr.Ponto1.x,i,psimbolo);
+				pPonto = IncluiCalda(pPonto,ptr.Ponto2.x,i,psimbolo);
+			}
+		}
+		else
+		{	
+			for(i=ptr.Ponto1.y;i<ptr.Ponto2.y;i++)
+			{
+				pPonto = IncluiCalda(pPonto,ptr.Ponto1.x,i,psimbolo);
+				pPonto = IncluiCalda(pPonto,ptr.Ponto2.x,i,psimbolo);
+			}
+		}
+	}
+	else
+	{
+		for(i=ptr.Ponto1.x;i<ptr.Ponto2.x;i++)
+		{
+			pPonto = IncluiCalda(pPonto,i,ptr.Ponto1.y,psimbolo);
+			pPonto = IncluiCalda(pPonto,i,ptr.Ponto2.y,psimbolo);
+		}
+		if(ptr.Ponto1.y > ptr.Ponto2.y)
+		{	
+			for(i=ptr.Ponto2.y;i<ptr.Ponto1.y;i++)
+			{
+				pPonto = IncluiCalda(pPonto,ptr.Ponto1.x,i,psimbolo);
+				pPonto = IncluiCalda(pPonto,ptr.Ponto2.x,i,psimbolo);
+			}
+		}
+		else
+		{	
+			for(i=ptr.Ponto1.y;i<ptr.Ponto2.y;i++)
+			{
+				pPonto = IncluiCalda(pPonto,ptr.Ponto1.x,i,psimbolo);
+				pPonto = IncluiCalda(pPonto,ptr.Ponto2.x,i,psimbolo);
+			}
+		}
+	}
+	retangulos.Elementos[retangulos.Qtde].Ponto1.x = pPonto->x;
+	retangulos.Elementos[retangulos.Qtde].Ponto1.y = pPonto->y;
+	retangulos.Elementos[retangulos.Qtde].Ponto2.x = ptr.Ponto2.x;
+	retangulos.Elementos[retangulos.Qtde].Ponto2.y = ptr.Ponto2.y;	
+	retangulos.Elementos[retangulos.Qtde].Ponto1.Prox = pPonto->Prox;
+	retangulos.Elementos[retangulos.Qtde].Ponto1.simb = psimbolo;
+	retangulos.Elementos[retangulos.Qtde].Ponto2.simb = psimbolo;
+	retangulos.Qtde++;
 }

@@ -192,6 +192,44 @@ void eLinha(struct TVLinhas &linhas)
 	}
 }
 
+// Incluindo Triangulo
+// Excluindo Triangulo
+
+// Inserindo um Retangulo
+void iRetangulo(struct TVRetangulos &retangulos)
+{
+	if(retangulos.Qtde == 5 )
+	{
+		printf("Nao %c possivel inserir mais retangulos!\n", 130);
+		printf("A quantidade m%cxima de 5 retangulos foi atingida!\n", 160);
+		system("pause");
+	}
+	else
+	{
+		struct TRetangulo retangulo;
+		char simbolo;
+		printf("Digite a coordenada do primeiro ponto em par ordenado (separados por um espa%co):\n", 135);
+		printf("Exemplo: 30 14\n");
+		scanf("%d %d", &retangulo.Ponto1.x, &retangulo.Ponto1.y);
+		fflush(stdin);
+		printf("Digite a coordenada do segundo ponto em par ordenado (separados por um espa%co):\n", 135);
+		printf("Exemplo: 6 12\n");
+		scanf("%d %d", &retangulo.Ponto2.x, &retangulo.Ponto2.y);
+		fflush(stdin);
+		if((retangulo.Ponto1.x == retangulo.Ponto2.x)or(retangulo.Ponto1.y == retangulo.Ponto2.y))
+		{
+			printf("\nNao %c possivel gerar retangulos com pontos na mesma linha/coluna!\n", 130);
+			system("PAUSE");
+		}
+		else
+		{
+			printf("Digite o s%cmbolo do retangulo:\n", 161);
+			scanf("%c",&simbolo);
+			fflush(stdin);
+			PlotaRetangulo(retangulos,retangulo,simbolo); // GeoLib.h
+		}
+	}
+}
 
 // Procedimento de Redimensionamento de Janela
 void SetWindow(int Width, int Height) 

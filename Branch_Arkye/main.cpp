@@ -14,12 +14,13 @@ int main()
 	char grid[40][40];
 	struct TVPontos pontos;
 	struct TVLinhas linhas;
+	struct TVRetangulos retangulos;
 	
     // While para o menu
     while (opcao!=9)
 	{
         system("cls");
-        AtualizaGrafico(grid,pontos,linhas); // GeoLib.h
+        AtualizaGrafico(grid,pontos,linhas,retangulos); // GeoLib.h
         printf("\n\n\n");
         opcao=Menu(); // Console.h
         system ("cls");
@@ -55,6 +56,7 @@ int main()
                 }
             case 7:
 				{
+					iRetangulo(retangulos);
                     break;
                 }
             case 8:
