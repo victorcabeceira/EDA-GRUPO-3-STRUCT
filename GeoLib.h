@@ -90,10 +90,12 @@ struct TVRetangulo{
     TVRetangulo(){Qtd=0;}       
 };
 
+//Procedimento para mostrar os pontos 
 void MostraPontos(TVPontos *ppontos) {
-    int pind;
+    int pind;  //Contador
     system("cls"); //Limpa a tela
     printf("Ponto: (X, Y)\n");
+    //Imprimindo os pontos
     for (pind = 0; pind < ppontos->Qtd; pind++) {
         printf("%d: (%d, %d)", pind+1, ppontos->elementos[pind].x, ppontos->elementos[pind].y);
         printf("\n");
