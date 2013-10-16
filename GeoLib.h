@@ -33,6 +33,8 @@ char **Alocar(int i,int j){
     return(PontMat);
 	
 }
+
+//Parte 2 Criação do Gride
 struct Gride {
     int QX, QY; //QX: unidades do eixo X (colunas), QY: unidades do eixo Y (linhas).
     char **Grid;
@@ -40,7 +42,7 @@ struct Gride {
         QX = pQX;
         QY = pQY;
         Grid = Alocar(QY, QX);
-        for (int py = 0; py < QY; py++)
+        for (int py = 0; py < QY; py++)   
             for (int px = 0; px < QX; px++)
                 Grid[py][px] = '.';
     }
