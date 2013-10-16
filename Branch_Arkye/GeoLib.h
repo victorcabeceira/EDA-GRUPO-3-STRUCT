@@ -47,17 +47,17 @@ struct TVLinhas{
 
 // Funções de Tratamento de Listas
 
-TPonto *IncluiAntesCalda(TPonto *pLista, int x, int y, char psimbolo)
+TPonto *IncluiCalda(TPonto *pLista, int x, int y, char psimbolo)
 {
 	TPonto *pNovoNo, *pAux;
 	pNovoNo = (TPonto*) malloc(sizeof(TPonto));
 	pNovoNo->x = x;
 	pNovoNo->y = y;
 	pNovoNo->simb = psimbolo;
+	pNovoNo->Prox = NULL;
 	pAux = pLista;
-	while(pAux->Prox->Prox!=NULL)
+	while(pAux->Prox!=NULL)
 		pAux = pAux->Prox;
-	pNovoNo->Prox = pAux->Prox;
 	pAux->Prox = pNovoNo;
 	return pLista;
 }
@@ -66,7 +66,7 @@ TPonto *IncluiAntesCalda(TPonto *pLista, int x, int y, char psimbolo)
 void AtualizaGrafico(char grid[40][40], struct TVPontos &ppontos, struct TVLinhas &plinhas)
 {
 	int imp=0, k=0;
-	struct TPonto *Aux;
+	TPonto *Aux;
 	for(int j=0; j<41; j++) // Cadeia de Linhas
 	{
 		for(int i=0; i<42; i++) // Cadeia de Colunas
@@ -104,18 +104,21 @@ void AtualizaGrafico(char grid[40][40], struct TVPontos &ppontos, struct TVLinha
 					{
 						for(k=0; k<plinhas.Qtde; k++)
 						{
+							// Ponto 1
 							if(plinhas.Elementos[k].Ponto1.x == i-1)
 							{
 								if(plinhas.Elementos[k].Ponto1.y == j-1)
 								{
 									grid[i][j] = plinhas.Elementos[k].Ponto1.simb;
 									imp++;
+									break;
 								}
 							}
+							// Nós
 							else
 							{
 								Aux = plinhas.Elementos[k].Ponto1.Prox;
-								while(Aux->x!=plinhas.Elementos[k].Ponto2.x)
+								while(Aux != NULL)
 								{
 									if(Aux->x == i-1)
 									{
@@ -129,14 +132,22 @@ void AtualizaGrafico(char grid[40][40], struct TVPontos &ppontos, struct TVLinha
 									Aux = Aux->Prox;
 								}
 							}
+							// Ponto2
+							if(plinhas.Elementos[k].Ponto2.x == i-1)
+							{
+								if(plinhas.Elementos[k].Ponto2.y == j-1)
+								{
+									grid[i][j] = plinhas.Elementos[k].Ponto2.simb;
+									imp++;
+									break;
+								}
+							}
 						}
 						if(imp==0)
 							grid[i][j] = '.';
 						else
 							imp=0;
 					}
-					else if(plinhas.Qtde==0)
-						grid[i][j] = '.';
 						
 					// Sequencia de Hierarquia 01: Plotando Pontos
 					if(ppontos.Qtde!=0)
@@ -157,8 +168,9 @@ void AtualizaGrafico(char grid[40][40], struct TVPontos &ppontos, struct TVLinha
 						else
 							imp=0;
 					}
-					else if(ppontos.Qtde==0)
+					else if((ppontos.Qtde==0)&&(plinhas.Qtde==0))
 						grid[i][j] = '.';
+						
 					printf(" %c ", grid[i][j]);
 				}
 			}
@@ -181,9 +193,8 @@ void PlotaLinha(struct TVLinhas &linhas, struct TLinha &ptr, char psimbolo)
 	float a = 0, b = 0, sX=0, sX2=0, sY=0, sXY=0, tX=0;
 	int maxY = 0, y=0, t=0, x=0, minY =0;
 	TPonto *pPonto;
-	pPonto = &ptr.Ponto1; // Apontando pPonto para Cabeça (ponto1)
-	ptr.Ponto1.Prox = &ptr.Ponto2; 	// Apontando Cabeça (ponto1) para Calda (ponto2)
-	ptr.Ponto2.Prox = NULL;
+	pPonto = (TPonto *) malloc(sizeof(TPonto));
+	pPonto = &ptr.Ponto1;
 	// Calculo da Reta
 	sX = ptr.Ponto1.x + ptr.Ponto2.x;
 	sX2 = (ptr.Ponto1.x*ptr.Ponto1.x) + (ptr.Ponto2.x*ptr.Ponto2.x);
@@ -225,13 +236,14 @@ void PlotaLinha(struct TVLinhas &linhas, struct TLinha &ptr, char psimbolo)
 			}
 		}
 		x = int(tX);
-		*pPonto = *IncluiAntesCalda(pPonto,x,y,psimbolo);	
+		pPonto = IncluiCalda(pPonto,x,y,psimbolo);	
 	}
-	linhas.Elementos[linhas.Qtde].Ponto1.x = ptr.Ponto1.x;
-	linhas.Elementos[linhas.Qtde].Ponto1.y = ptr.Ponto1.y;
+	linhas.Elementos[linhas.Qtde].Ponto1.x = pPonto->x;
+	linhas.Elementos[linhas.Qtde].Ponto1.y = pPonto->y;
 	linhas.Elementos[linhas.Qtde].Ponto2.x = ptr.Ponto2.x;
 	linhas.Elementos[linhas.Qtde].Ponto2.y = ptr.Ponto2.y;	
 	linhas.Elementos[linhas.Qtde].Ponto1.Prox = pPonto->Prox;
-	linhas.Elementos[linhas.Qtde].Ponto2.Prox = NULL;
+	linhas.Elementos[linhas.Qtde].Ponto1.simb = psimbolo;
+	linhas.Elementos[linhas.Qtde].Ponto2.simb = psimbolo;
 	linhas.Qtde++;
 }

@@ -38,7 +38,6 @@ int main()
             case 3: // Incluir Linha
 				{
 					iLinha(linhas); // Console.h
-					ListarLinha(linhas);
                     break;
                 }
             case 4:

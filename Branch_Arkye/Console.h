@@ -126,20 +126,6 @@ void iLinha(struct TVLinhas &linhas)
 	}
 }
 
-void ListarLinha(TVLinhas &linhas)
-{
-	for(int k=0;k<linhas.Qtde;k++)
-	{
-		printf("%d", linhas.Elementos[k].Ponto1.x);
-		printf(" %d\n", linhas.Elementos[k].Ponto1.y);
-		printf("%d", linhas.Elementos[k].Ponto1.Prox->x);
-		printf(" %d\n", linhas.Elementos[k].Ponto1.Prox->y);
-		printf("%d", linhas.Elementos[k].Ponto1.Prox->Prox->x);
-		printf(" %d\n", linhas.Elementos[k].Ponto1.Prox->Prox->x);
-		system("PAUSE");
-	}
-}
-
 // Procedimento de Redimensionamento de Janela
 void SetWindow(int Width, int Height) 
 {
