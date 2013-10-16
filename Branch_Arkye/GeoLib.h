@@ -320,52 +320,78 @@ void PlotaLinha(struct TVLinhas &linhas, struct TLinha &ptr, char psimbolo)
 	TPonto *pPonto;
 	pPonto = (TPonto *) malloc(sizeof(TPonto));
 	pPonto = &ptr.Ponto1;
-	// Calculo da Reta
-	sX = ptr.Ponto1.x + ptr.Ponto2.x;
-	sX2 = (ptr.Ponto1.x*ptr.Ponto1.x) + (ptr.Ponto2.x*ptr.Ponto2.x);
-	sY = ptr.Ponto1.y + ptr.Ponto2.y;
-	sXY = (ptr.Ponto1.x*ptr.Ponto1.y) + (ptr.Ponto2.x*ptr.Ponto2.y);
-	a = ((sX2*sY) - (sX*sXY))/((2*sX2) - (sX*sX));
-	b = ((2*sXY) - (sX*sY))/((2*sX2) - (sX*sX));
-	
-	// Calculo de ajuste de float para inteiro
-	if (ptr.Ponto1.y > ptr.Ponto2.y)
+	if(ptr.Ponto1.x == ptr.Ponto2.x)
 	{
-		maxY = ptr.Ponto1.y;
-		minY = ptr.Ponto2.y;
+		if(ptr.Ponto1.y > ptr.Ponto2.y)
+		{
+			for(i=ptr.Ponto1.y;i<ptr.Ponto2.y;i++)
+				pPonto = IncluiCalda(pPonto,ptr.Ponto1.x,i,psimbolo);
+		}
+		else
+		{
+			for(i=ptr.Ponto2.y; i<ptr.Ponto1.y;i++)
+				pPonto = IncluiCalda(pPonto,ptr.Ponto1.x,i,psimbolo);
+		}
+	}
+	else if(ptr.Ponto1.y == ptr.Ponto2.y)
+	{
+		if(ptr.Ponto1.x > ptr.Ponto2.x)
+		{
+			for(i=ptr.Ponto1.x;i<ptr.Ponto2.x;i++)
+				pPonto = IncluiCalda(pPonto,i,ptr.Ponto1.y,psimbolo);
+		}
+		else
+		{
+			for(i=ptr.Ponto2.x;i<ptr.Ponto2.x;i++)
+				pPonto = IncluiCalda(pPonto,i,ptr.Ponto1.y,psimbolo);
+		}
 	}
 	else
 	{
-		maxY = ptr.Ponto2.y;
-		minY = ptr.Ponto1.y;
-	}
-	for(y=minY+1;y<maxY;y++)
-	{
-		antX = x;
-		tX = (y - a)/b;
-		for(t=0;t<40;t++)
+		// Calculo da Reta
+		sX = ptr.Ponto1.x + ptr.Ponto2.x;
+		sX2 = (ptr.Ponto1.x*ptr.Ponto1.x) + (ptr.Ponto2.x*ptr.Ponto2.x);
+		sY = ptr.Ponto1.y + ptr.Ponto2.y;
+		sXY = (ptr.Ponto1.x*ptr.Ponto1.y) + (ptr.Ponto2.x*ptr.Ponto2.y);
+		a = ((sX2*sY) - (sX*sXY))/((2*sX2) - (sX*sX));
+		b = ((2*sXY) - (sX*sY))/((2*sX2) - (sX*sX));
+	
+		// Calculo de ajuste de float para inteiro
+		if (ptr.Ponto1.y > ptr.Ponto2.y)
 		{
-			if(t==tX)
-				break;
-			if(t>tX)
+			maxY = ptr.Ponto1.y;
+			minY = ptr.Ponto2.y;
+		}
+		else
+		{
+			maxY = ptr.Ponto2.y;
+			minY = ptr.Ponto1.y;
+		}
+		for(y=minY+1;y<maxY;y++)
+		{
+			antX = x;
+			tX = (y - a)/b;
+			for(t=0;t<40;t++)
 			{
-				if(tX-t-1 > t-tX)
-				{
-					tX=t;
+				if(t==tX)
 					break;
-				}
-				else
+				if(t>tX)
 				{
-					tX=t-1;
-					break;
+					if(tX-t-1 > t-tX)
+					{
+						tX=t;
+						break;
+					}
+					else
+					{
+						tX=t-1;
+						break;
+					}
 				}
 			}
-		}
-		x = int(tX);
-			pPonto = IncluiCalda(pPonto,x,y,psimbolo);
-		if(antX!=0)
-		{
-			if(antX!=x)
+			x = int(tX);
+				pPonto = IncluiCalda(pPonto,x,y,psimbolo);
+			if((antX!=0)&&(antX!=x))
 			{
 				if(antX>x+1)
 				{
@@ -377,8 +403,9 @@ void PlotaLinha(struct TVLinhas &linhas, struct TLinha &ptr, char psimbolo)
 					for(i=antX;i<x;i++)
 						pPonto = IncluiCalda(pPonto,i,y,psimbolo);
 				}
-			}
-		}	
+			}	
+		}
+		
 	}
 	linhas.Elementos[linhas.Qtde].Ponto1.x = pPonto->x;
 	linhas.Elementos[linhas.Qtde].Ponto1.y = pPonto->y;
