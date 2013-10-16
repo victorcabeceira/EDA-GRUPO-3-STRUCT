@@ -216,10 +216,6 @@ void AtualizaGrafico(char grid[40][40], struct TVPontos &ppontos, struct TVLinha
 								}
 							}
 						}
-						if(imp==0)
-							grid[i][j] = '.';
-						else
-							imp=0;
 					}					
 					
 					// Sequencia de Hierarquia 02: Plotando Linhas
@@ -266,10 +262,6 @@ void AtualizaGrafico(char grid[40][40], struct TVPontos &ppontos, struct TVLinha
 								}
 							}
 						}
-						if(imp==0)
-							grid[i][j] = '.';
-						else
-							imp=0;
 					}
 						
 					// Sequencia de Hierarquia 01: Plotando Pontos
@@ -286,11 +278,11 @@ void AtualizaGrafico(char grid[40][40], struct TVPontos &ppontos, struct TVLinha
 								}
 							}
 						}
-						if (imp==0)
-							grid[i][j] = '.';
-						else
-							imp=0;
 					}
+					if (imp==0)
+						grid[i][j] = '.';
+					else
+						imp=0;					
 					
 					if((ppontos.Qtde==0)&&(plinhas.Qtde==0)&&(ptriangs.Qtde==0)&&(prets.Qtde==0))
 						grid[i][j] = '.';
@@ -324,29 +316,29 @@ void PlotaLinha(struct TVLinhas &linhas, struct TLinha &ptr, char psimbolo)
 	{
 		if(ptr.Ponto1.y > ptr.Ponto2.y)
 		{
-			for(i=ptr.Ponto1.y;i<ptr.Ponto2.y;i++)
-				pPonto = IncluiCalda(pPonto,ptr.Ponto1.x,i,psimbolo);
+			for(i=ptr.Ponto2.y;i<ptr.Ponto1.y;i++)
+				pPonto = IncluiCalda(pPonto,ptr.Ponto2.x,i,psimbolo);
 		}
 		else
 		{
-			for(i=ptr.Ponto2.y; i<ptr.Ponto1.y;i++)
-				pPonto = IncluiCalda(pPonto,ptr.Ponto1.x,i,psimbolo);
+			for(i=ptr.Ponto1.y; i<ptr.Ponto2.y;i++)
+				pPonto = IncluiCalda(pPonto,ptr.Ponto2.x,i,psimbolo);
 		}
 	}
 	else if(ptr.Ponto1.y == ptr.Ponto2.y)
 	{
 		if(ptr.Ponto1.x > ptr.Ponto2.x)
 		{
-			for(i=ptr.Ponto1.x;i<ptr.Ponto2.x;i++)
+			for(i=ptr.Ponto2.x;i<ptr.Ponto1.x;i++)
 				pPonto = IncluiCalda(pPonto,i,ptr.Ponto1.y,psimbolo);
 		}
 		else
 		{
-			for(i=ptr.Ponto2.x;i<ptr.Ponto2.x;i++)
+			for(i=ptr.Ponto1.x;i<ptr.Ponto2.x;i++)
 				pPonto = IncluiCalda(pPonto,i,ptr.Ponto1.y,psimbolo);
 		}
 	}
-	else
+	if((ptr.Ponto1.x != ptr.Ponto2.x)&&(ptr.Ponto1.y != ptr.Ponto2.y))
 	{
 		// Calculo da Reta
 		sX = ptr.Ponto1.x + ptr.Ponto2.x;
