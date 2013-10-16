@@ -5,8 +5,11 @@
 
 // Sumário
 /* int Menu()
+ * void *ExcluiCalda(*TPonto)
  * void iPonto(TVPontos)
  * void ePonto(TVPontos)
+ * void iLinha(TVLinhas)
+ * void eLinha(TVLinhas)
  * void SetWindow(int,int)
  */
  
@@ -34,6 +37,19 @@ int Menu()
 	}while((op<1)||(op>9));
 	
     return (op); // Retorna a opção
+}
+
+
+// Funções de Tratamento de Listas
+TPonto *ExcluiCalda(TPonto *pLista)
+{
+	TPonto *pAux;
+	pAux = pLista;
+	while(pAux->Prox->Prox!=NULL)
+		pAux = pAux->Prox;
+	free(pAux->Prox);
+	pAux->Prox = NULL;
+	return pLista;
 }
 
 // Cadeias de Funções e Procedimentos que tem por objetivo a Inclusão de Figuras
@@ -122,9 +138,60 @@ void iLinha(struct TVLinhas &linhas)
 		printf("Digite o s%cmbolo da linha:\n", 161);
 		scanf("%c",&simbolo);
 		fflush(stdin);
-		PlotaLinha(linhas,linha,simbolo);
+		PlotaLinha(linhas,linha,simbolo); // GeoLib.h
 	}
 }
+
+// Excluindo uma Linha
+void eLinha(struct TVLinhas &linhas)
+{
+	if(linhas.Qtde == 0)
+	{
+		printf("Nao h%c linhas para ser excluido!\n", 160);
+		system("pause");		
+	}
+	else
+	{
+		int codigo=0, i = 0;
+		system("cls");
+		printf("[C%cdigo da Linha]:(Coordenada Ponto 1 X, Coordenada Ponto Y)(Coordenada Ponto 2 X, Coordenada Ponto 2 Y) = S%cmbolo do linha\n", 162, 161);
+		for (i = 0; i < linhas.Qtde; i++)
+			printf("[%d]:(%d, %d)(%d, %d) = %c \n", i+1, linhas.Elementos[i].Ponto1.x, linhas.Elementos[i].Ponto1.y, linhas.Elementos[i].Ponto2.x, linhas.Elementos[i].Ponto2.y, linhas.Elementos[i].Ponto1.simb);
+		printf("Insira o c%cdigo do ponto que deseja excluir:\n", 162);
+		printf("Exemplo: 2\n");
+		scanf("%d", &codigo);
+		fflush(stdin);
+		if((codigo>0)&&(codigo<=linhas.Qtde))
+		{
+			TPonto *Aux;
+			Aux = linhas.Elementos[codigo-1].Ponto1.Prox;
+			while(Aux->Prox->Prox!=NULL)
+				Aux = ExcluiCalda(Aux);
+			if(Aux->Prox->Prox==NULL)
+			{
+				free(Aux->Prox);
+				free(Aux);
+				linhas.Elementos[codigo-1].Ponto1.Prox = NULL;
+			}
+			linhas.Elementos[codigo-1].Ponto1.x = 40;
+			linhas.Elementos[codigo-1].Ponto1.y = 40;
+			linhas.Elementos[codigo-1].Ponto1.simb = ',';
+			linhas.Elementos[codigo-1].Ponto2.x = 40;
+			linhas.Elementos[codigo-1].Ponto2.y = 40;
+			linhas.Elementos[codigo-1].Ponto2.simb = ',';
+			for(i = codigo-1; i < linhas.Qtde; i++)
+				linhas.Elementos[i] = linhas.Elementos[i+1];
+			linhas.Qtde--;
+			printf("Linha [%d] excluida com sucesso!\n", codigo);
+		}
+		else
+		{
+			printf("C%cdigo incorreto!\n", 162);
+			system("pause");
+		}
+	}
+}
+
 
 // Procedimento de Redimensionamento de Janela
 void SetWindow(int Width, int Height) 

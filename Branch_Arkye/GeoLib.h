@@ -5,10 +5,15 @@
 // Sumário
 /* Structs
  * -> TPonto
+ * -> TLinha
  * -> TVPontos
+ * -> TVLinhas
+ * Tratamentos de Listas
+ * -> *IncluiCalda(TPonto,int,int,char)
  * Funções/Procedimentos
  * -> void AtualizaGrafico(TVPontos)
  * -> void PlotaPonto(TVPontos, TPonto, char)
+ * -> void PlotaLinha(TVLinhas, TLinha, char)
  */
  
 // Structs das Figuras Geométricas
@@ -46,7 +51,6 @@ struct TVLinhas{
 };
 
 // Funções de Tratamento de Listas
-
 TPonto *IncluiCalda(TPonto *pLista, int x, int y, char psimbolo)
 {
 	TPonto *pNovoNo, *pAux;
@@ -191,7 +195,7 @@ void PlotaLinha(struct TVLinhas &linhas, struct TLinha &ptr, char psimbolo)
 {
 	// Variaveis Locais
 	float a = 0, b = 0, sX=0, sX2=0, sY=0, sXY=0, tX=0;
-	int maxY = 0, y=0, t=0, x=0, minY =0;
+	int maxY = 0, y=0, t=0, x=0, minY =0, i=0, antX=0;
 	TPonto *pPonto;
 	pPonto = (TPonto *) malloc(sizeof(TPonto));
 	pPonto = &ptr.Ponto1;
@@ -216,6 +220,7 @@ void PlotaLinha(struct TVLinhas &linhas, struct TLinha &ptr, char psimbolo)
 	}
 	for(y=minY+1;y<maxY;y++)
 	{
+		antX = x;
 		tX = (y - a)/b;
 		for(t=0;t<40;t++)
 		{
@@ -236,7 +241,23 @@ void PlotaLinha(struct TVLinhas &linhas, struct TLinha &ptr, char psimbolo)
 			}
 		}
 		x = int(tX);
-		pPonto = IncluiCalda(pPonto,x,y,psimbolo);	
+			pPonto = IncluiCalda(pPonto,x,y,psimbolo);
+		if(antX!=0)
+		{
+			if(antX!=x)
+			{
+				if(antX>x+1)
+				{
+					for(i=antX;i>x;i--)
+						pPonto = IncluiCalda(pPonto,i,y,psimbolo);
+				}
+				else if(antX+1<x)
+				{
+					for(i=antX;i<x;i++)
+						pPonto = IncluiCalda(pPonto,i,y,psimbolo);
+				}
+			}
+		}	
 	}
 	linhas.Elementos[linhas.Qtde].Ponto1.x = pPonto->x;
 	linhas.Elementos[linhas.Qtde].Ponto1.y = pPonto->y;

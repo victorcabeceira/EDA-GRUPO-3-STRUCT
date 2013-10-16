@@ -40,8 +40,9 @@ int main()
 					iLinha(linhas); // Console.h
                     break;
                 }
-            case 4:
+            case 4: // Excluir Linha
 				{
+					eLinha(linhas); // Console.h
                     break;
                 }
             case 5:
