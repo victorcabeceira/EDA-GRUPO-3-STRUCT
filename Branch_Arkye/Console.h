@@ -11,7 +11,8 @@
  */
  
 // Função que define a opção escolhida no menu
-int Menu(){
+int Menu()
+{
     
 	int op;  // Variavel da opção
 	
@@ -50,12 +51,13 @@ void iPonto(struct TVPontos &pontos)
 	{
 		struct TPonto ponto;
 		char simbolo;
-		printf("Digite a cordenada do ponto em par ordenado (separados por um espa%co):\n", 135);
+		printf("Digite a coordenada do ponto em par ordenado (separados por um espa%co):\n", 135);
 		printf("Exemplo: 30 14\n");
 		scanf("%d %d", &ponto.x, &ponto.y);
 		fflush(stdin);
 		printf("Digite o s%cmbolo do ponto:\n", 161);
 		scanf("%c",&simbolo);
+		fflush(stdin);
 		PlotaPonto(pontos,ponto,simbolo);
 	}
 }
@@ -95,7 +97,48 @@ void ePonto(struct TVPontos &pontos)
 		}
 	}
 }
-		
+
+// Inserindo uma Linha
+void iLinha(struct TVLinhas &linhas)
+{
+	if(linhas.Qtde == 5 )
+	{
+		printf("Nao %c possivel inserir mais linhas!\n", 130);
+		printf("A quantidade m%cxima de 5 linhas foi atingida!\n", 160);
+		system("pause");
+	}
+	else
+	{
+		struct TLinha linha;
+		char simbolo;
+		printf("Digite a coordenada do primeiro ponto em par ordenado (separados por um espa%co):\n", 135);
+		printf("Exemplo: 30 14\n");
+		scanf("%d %d", &linha.Ponto1.x, &linha.Ponto1.y);
+		fflush(stdin);
+		printf("Digite a coordenada do segundo ponto em par ordenado (separados por um espa%co):\n", 135);
+		printf("Exemplo: 6 12\n");
+		scanf("%d %d", &linha.Ponto2.x, &linha.Ponto2.y);
+		fflush(stdin);
+		printf("Digite o s%cmbolo da linha:\n", 161);
+		scanf("%c",&simbolo);
+		fflush(stdin);
+		PlotaLinha(linhas,linha,simbolo);
+	}
+}
+
+void ListarLinha(TVLinhas &linhas)
+{
+	for(int k=0;k<linhas.Qtde;k++)
+	{
+		printf("%d", linhas.Elementos[k].Ponto1.x);
+		printf(" %d\n", linhas.Elementos[k].Ponto1.y);
+		printf("%d", linhas.Elementos[k].Ponto1.Prox->x);
+		printf(" %d\n", linhas.Elementos[k].Ponto1.Prox->y);
+		printf("%d", linhas.Elementos[k].Ponto1.Prox->Prox->x);
+		printf(" %d\n", linhas.Elementos[k].Ponto1.Prox->Prox->x);
+		system("PAUSE");
+	}
+}
 
 // Procedimento de Redimensionamento de Janela
 void SetWindow(int Width, int Height) 
