@@ -113,25 +113,25 @@ TPonto *GeraLinha(TPonto *pPonto, TLinha &ptr, char psimbolo)
 		// ERRO ESTÁ AQUI
 		if(ptr.Ponto1.y > ptr.Ponto2.y)
 		{
-			for(i=ptr.Ponto2.y;i<ptr.Ponto1.y;i++)
+			for(i=ptr.Ponto2.y;i<=ptr.Ponto1.y;i++)
 				pPonto = IncluiCalda(pPonto,ptr.Ponto1.x,i,psimbolo);
 		}
 		else
 		{
-			for(i=ptr.Ponto1.y; i<ptr.Ponto2.y;i++)
-				pPonto = IncluiCalda(pPonto,ptr.Ponto1.x,i,psimbolo);
+			for(i=ptr.Ponto1.y; i<=ptr.Ponto2.y;i++)
+				pPonto = IncluiCalda(pPonto, ptr.Ponto1.x, i , psimbolo);
 		}
 	}
 	else if(ptr.Ponto1.y == ptr.Ponto2.y)
 	{
 		if(ptr.Ponto1.x > ptr.Ponto2.x)
 		{
-			for(i=ptr.Ponto2.x;i<ptr.Ponto1.x;i++)
+			for(i=ptr.Ponto2.x;i<=ptr.Ponto1.x;i++)
 				pPonto = IncluiCalda(pPonto,i,ptr.Ponto1.y,psimbolo);
 		}
 		else
 		{
-			for(i=ptr.Ponto1.x;i<ptr.Ponto2.x;i++)
+			for(i=ptr.Ponto1.x;i<=ptr.Ponto2.x;i++)
 				pPonto = IncluiCalda(pPonto,i,ptr.Ponto1.y,psimbolo);
 		}
 	}
@@ -318,6 +318,16 @@ void AtualizaGrafico(char grid[40][40], struct TVPontos &ppontos, struct TVLinha
 									Aux = Aux->Prox;
 								}
 							}
+							// Linha 2 Ponto 1
+							if(prets.Elementos[k].Linha2.Ponto1.x == i-1)
+							{
+								if(prets.Elementos[k].Linha2.Ponto1.y == j-1)
+								{
+									grid[i][j] = prets.Elementos[k].Linha2.Ponto1.simb;
+									imp++;
+									break;
+								}
+							}
 						}
 					}					
 					
@@ -330,10 +340,11 @@ void AtualizaGrafico(char grid[40][40], struct TVPontos &ppontos, struct TVLinha
 							if(ptriangs.Elementos[k].Linha1.Ponto1.x == i-1)
 							{
 								if(ptriangs.Elementos[k].Linha1.Ponto1.y == j-1)
-								{
+								{									
 									grid[i][j] = ptriangs.Elementos[k].Linha1.Ponto1.simb;
 									imp++;
 									break;
+
 								}
 							}
 							// Nós
@@ -448,8 +459,6 @@ void PlotaLinha(struct TVLinhas &linhas, struct TLinha &ptr, char psimbolo)
 	TPonto *pPonto;
 	pPonto = (TPonto *) malloc(sizeof(TPonto));
 	pPonto = &ptr.Ponto1;
-	//pPonto->Prox = &ptr.Ponto2;
-	//ptr.Ponto2.Prox = NULL;
 	pPonto = GeraLinha(pPonto,ptr,psimbolo);
 	system("PAUSE");
 	linhas.Elementos[linhas.Qtde].Ponto1.x = pPonto->x;
@@ -472,12 +481,12 @@ void PlotaTriangulo(struct TVTriangulos &triangulos, struct TTriangulo &ptr, cha
 	{
 		if(ptr.neg_larg==0)
 		{
-			ptr.Linha1.Ponto2.x -= ptr.larg;
+			ptr.Linha1.Ponto2.x = ptr.Linha1.Ponto1.x - ptr.larg;
 			ptr.Linha1.Ponto2.y = ptr.Linha1.Ponto1.y;
 			ptr.Linha2.Ponto1.x = ptr.Linha1.Ponto1.x;
 			ptr.Linha2.Ponto1.y = ptr.Linha1.Ponto1.y;
 			ptr.Linha2.Ponto2.x = ptr.Linha1.Ponto1.x;
-			ptr.Linha2.Ponto2.y -= ptr.alt;
+			ptr.Linha2.Ponto2.y = ptr.Linha1.Ponto1.y - ptr.alt;
 			ptr.Linha3.Ponto1.x = ptr.Linha2.Ponto2.x;
 			ptr.Linha3.Ponto1.y = ptr.Linha2.Ponto2.y;
 			ptr.Linha3.Ponto2.x = ptr.Linha1.Ponto2.x;
@@ -485,28 +494,28 @@ void PlotaTriangulo(struct TVTriangulos &triangulos, struct TTriangulo &ptr, cha
 		}
 		else
 		{
-			ptr.Linha1.Ponto2.x += ptr.larg;
+			ptr.Linha1.Ponto2.x = ptr.Linha1.Ponto1.x + ptr.larg;
 			ptr.Linha1.Ponto2.y = ptr.Linha1.Ponto1.y;
 			ptr.Linha2.Ponto1.x = ptr.Linha1.Ponto1.x;
 			ptr.Linha2.Ponto1.y = ptr.Linha1.Ponto1.y;
 			ptr.Linha2.Ponto2.x = ptr.Linha1.Ponto1.x;
-			ptr.Linha2.Ponto2.y -= ptr.alt;
+			ptr.Linha2.Ponto2.y = ptr.Linha1.Ponto1.y - ptr.alt;
 			ptr.Linha3.Ponto1.x = ptr.Linha2.Ponto2.x;
 			ptr.Linha3.Ponto1.y = ptr.Linha2.Ponto2.y;
 			ptr.Linha3.Ponto2.x = ptr.Linha1.Ponto2.x;
-			ptr.Linha3.Ponto2.y = ptr.Linha1.Ponto2.y;				
+			ptr.Linha3.Ponto2.y = ptr.Linha1.Ponto2.y;		
 		}
 	}
 	else
 	{
 		if(ptr.neg_larg==0)
 		{
-			ptr.Linha1.Ponto2.x -= ptr.larg;
+			ptr.Linha1.Ponto2.x = ptr.Linha1.Ponto1.x - ptr.larg;
 			ptr.Linha1.Ponto2.y = ptr.Linha1.Ponto1.y;
 			ptr.Linha2.Ponto1.x = ptr.Linha1.Ponto1.x;
 			ptr.Linha2.Ponto1.y = ptr.Linha1.Ponto1.y;
 			ptr.Linha2.Ponto2.x = ptr.Linha1.Ponto1.x;
-			ptr.Linha2.Ponto2.y += ptr.alt;
+			ptr.Linha2.Ponto2.y = ptr.Linha1.Ponto1.y + ptr.alt;
 			ptr.Linha3.Ponto1.x = ptr.Linha2.Ponto2.x;
 			ptr.Linha3.Ponto1.y = ptr.Linha2.Ponto2.y;
 			ptr.Linha3.Ponto2.x = ptr.Linha1.Ponto2.x;
@@ -514,12 +523,12 @@ void PlotaTriangulo(struct TVTriangulos &triangulos, struct TTriangulo &ptr, cha
 		}
 		else
 		{
-			ptr.Linha1.Ponto2.x += ptr.larg;
+			ptr.Linha1.Ponto2.x = ptr.Linha1.Ponto1.x + ptr.larg;
 			ptr.Linha1.Ponto2.y = ptr.Linha1.Ponto1.y;
 			ptr.Linha2.Ponto1.x = ptr.Linha1.Ponto1.x;
 			ptr.Linha2.Ponto1.y = ptr.Linha1.Ponto1.y;
 			ptr.Linha2.Ponto2.x = ptr.Linha1.Ponto1.x;
-			ptr.Linha2.Ponto2.y += ptr.alt;
+			ptr.Linha2.Ponto2.y = ptr.Linha1.Ponto1.y + ptr.alt;
 			ptr.Linha3.Ponto1.x = ptr.Linha2.Ponto2.x;
 			ptr.Linha3.Ponto1.y = ptr.Linha2.Ponto2.y;
 			ptr.Linha3.Ponto2.x = ptr.Linha1.Ponto2.x;
@@ -527,7 +536,7 @@ void PlotaTriangulo(struct TVTriangulos &triangulos, struct TTriangulo &ptr, cha
 		}
 	}
 	pPonto = GeraLinha(pPonto,ptr.Linha1,psimbolo);
-	pPonto = GeraLinha(pPonto,ptr.Linha2,psimbolo);
+	pPonto = GeraLinha(pPonto,ptr.Linha2,psimbolo); // CHECK
 	pPonto = GeraLinha(pPonto,ptr.Linha3,psimbolo);
 	triangulos.Elementos[triangulos.Qtde].Linha1.Ponto1.x = pPonto->x;
 	triangulos.Elementos[triangulos.Qtde].Linha1.Ponto1.y = pPonto->y;
@@ -543,22 +552,22 @@ void PlotaRetangulo(struct TVRetangulos &retangulos, struct TRetangulo &ptr, cha
 	pPonto = (TPonto *) malloc(sizeof(TPonto));
 	pPonto = &ptr.Linha1.Ponto1;
 	
-	ptr.Linha1.Ponto2.x = ptr.Linha1.Ponto1.x;
-	ptr.Linha1.Ponto2.y = ptr.Linha2.Ponto1.y;
-	ptr.Linha2.Ponto2.x = ptr.Linha2.Ponto1.x;
-	ptr.Linha2.Ponto2.y = ptr.Linha1.Ponto1.y;
-	ptr.Linha3.Ponto1.x = ptr.Linha1.Ponto1.x;
-	ptr.Linha3.Ponto1.y = ptr.Linha1.Ponto1.y;
-	ptr.Linha3.Ponto2.x = ptr.Linha2.Ponto2.x;
-	ptr.Linha3.Ponto2.y = ptr.Linha2.Ponto2.y;
-	ptr.Linha4.Ponto1.x = ptr.Linha2.Ponto1.x;
-	ptr.Linha4.Ponto1.y = ptr.Linha2.Ponto1.y;
-	ptr.Linha4.Ponto2.x = ptr.Linha1.Ponto2.x;
-	ptr.Linha4.Ponto2.y = ptr.Linha1.Ponto2.x;
+	ptr.Linha1.Ponto2.x = ptr.Linha2.Ponto1.x;
+	ptr.Linha1.Ponto2.y = ptr.Linha1.Ponto1.y;
+	ptr.Linha2.Ponto2.x = ptr.Linha1.Ponto1.x;
+	ptr.Linha2.Ponto2.y = ptr.Linha2.Ponto1.y;
+	ptr.Linha3.Ponto1.x = ptr.Linha2.Ponto1.x;
+	ptr.Linha3.Ponto1.y = ptr.Linha2.Ponto1.y;
+	ptr.Linha3.Ponto2.x = ptr.Linha1.Ponto2.x;
+	ptr.Linha3.Ponto2.y = ptr.Linha1.Ponto2.y;
+	ptr.Linha4.Ponto1.x = ptr.Linha1.Ponto1.x;
+	ptr.Linha4.Ponto1.y = ptr.Linha1.Ponto1.y;
+	ptr.Linha4.Ponto2.x = ptr.Linha2.Ponto2.x;
+	ptr.Linha4.Ponto2.y = ptr.Linha2.Ponto2.x;
 	pPonto = GeraLinha(pPonto,ptr.Linha1,psimbolo);
 	pPonto = GeraLinha(pPonto,ptr.Linha2,psimbolo);
 	pPonto = GeraLinha(pPonto,ptr.Linha3,psimbolo);
-	pPonto = GeraLinha(pPonto,ptr.Linha4,psimbolo);
+	pPonto = GeraLinha(pPonto,ptr.Linha4,psimbolo); // CHECK
 	retangulos.Elementos[retangulos.Qtde].Linha1.Ponto1.x = pPonto->x;
 	retangulos.Elementos[retangulos.Qtde].Linha1.Ponto1.y = pPonto->y;
 	retangulos.Elementos[retangulos.Qtde].Linha2.Ponto1.x = ptr.Linha2.Ponto1.x;

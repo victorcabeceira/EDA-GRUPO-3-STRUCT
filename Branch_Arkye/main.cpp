@@ -69,8 +69,7 @@ int main()
                 }				
         }//Fim do Switch
     }//Fim do While
-
-    printf("\nFim do Programa!\n\n");
-	system("PAUSE");
+	if(opcao==9)
+		printf("\nFim do Programa!\n\n");
 	return 0;
 }

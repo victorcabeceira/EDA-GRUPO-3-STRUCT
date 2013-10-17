@@ -230,7 +230,7 @@ void iTriangulo(struct TVTriangulos &triangulos)
 		scanf("%d", &neg_larg);
 		triangulo.neg_larg = neg_larg;
 		fflush(stdin);
-		printf("Digite o s%cmbolo do retangulo:\n", 161);
+		printf("Digite o s%cmbolo do triangulo:\n", 161);
 		scanf("%c",&simbolo);
 		fflush(stdin);
 		PlotaTriangulo(triangulos,triangulo,simbolo); // GeoLib.h
