@@ -6,8 +6,12 @@
 /* Structs
  * -> TPonto
  * -> TLinha
+ * -> TTriangulo
+ * -> TRetangulo
  * -> TVPontos
  * -> TVLinhas
+ * -> TVTriangulos
+ * -> TVRetangulos
  * Tratamentos de Listas
  * -> *IncluiCalda(TPonto,int,int,char)
  * Tratamentos de Linhas
@@ -16,6 +20,8 @@
  * -> void AtualizaGrafico(TVPontos)
  * -> void PlotaPonto(TVPontos, TPonto, char)
  * -> void PlotaLinha(TVLinhas, TLinha, char)
+ * -> void PlotaTriangulo(TVTriangulos, TTriangulo, char)
+ * -> void PlotaRetangulo(TVRetangulos, TRetangulo, char)
  */
  
 // Structs das Figuras Geométricas
@@ -85,7 +91,7 @@ struct TVRetangulos{
 	TVRetangulos(){Qtde = 0;}
 };
 
-// Funções de Tratamento de Listas
+// Funções de Tratamento de Listas -> Inclusão
 TPonto *IncluiCalda(TPonto *pLista, int x, int y, char psimbolo)
 {
 	TPonto *pNovoNo, *pAux;
@@ -101,16 +107,16 @@ TPonto *IncluiCalda(TPonto *pLista, int x, int y, char psimbolo)
 	return pLista;
 }
 
-
-// Funções de Tratamento de Linhas
+// Funções de Tratamento de Linhas -> Gerar Linhas
 TPonto *GeraLinha(TPonto *pPonto, TLinha &ptr, char psimbolo)
 {
 	// Variaveis Locais
 	float a = 0, b = 0, sX=0, sX2=0, sY=0, sXY=0, tX=0, tY=0;
 	int maxX = 0, maxY = 0, y=0, t=0, x=0, minX = 0, minY =0, i=0, mTermo=0;
+	
+	// Casos de Linhas Horizontais ou Verticais
 	if(ptr.Ponto1.x == ptr.Ponto2.x)
 	{
-		// ERRO ESTÁ AQUI
 		if(ptr.Ponto1.y > ptr.Ponto2.y)
 		{
 			for(i=ptr.Ponto2.y;i<=ptr.Ponto1.y;i++)
@@ -135,6 +141,8 @@ TPonto *GeraLinha(TPonto *pPonto, TLinha &ptr, char psimbolo)
 				pPonto = IncluiCalda(pPonto,i,ptr.Ponto1.y,psimbolo);
 		}
 	}
+	
+	// Casos de Linhas em Geral
 	if((ptr.Ponto1.x != ptr.Ponto2.x)&&(ptr.Ponto1.y != ptr.Ponto2.y))
 	{
 		// Calculo da Reta
@@ -145,7 +153,7 @@ TPonto *GeraLinha(TPonto *pPonto, TLinha &ptr, char psimbolo)
 		a = ((sX2*sY) - (sX*sXY))/((2*sX2) - (sX*sX));
 		b = ((2*sXY) - (sX*sY))/((2*sX2) - (sX*sX));
 	
-		// Calculo de ajuste de float para inteiro
+		// Calculo de ajuste de float para inteiro e criação da Lista
 		if (ptr.Ponto1.y > ptr.Ponto2.y)
 		{
 			maxY = ptr.Ponto1.y;
@@ -167,11 +175,10 @@ TPonto *GeraLinha(TPonto *pPonto, TLinha &ptr, char psimbolo)
 			maxX = ptr.Ponto2.x;
 			minX = ptr.Ponto1.x;
 		}
-		
 		for(y=minY;y<=maxY;y++)
 		{
 			tX = (y - a)/b;
-			for(t=0;t<40;t++)
+			for(t=0;t<=40;t++)
 			{
 				if(t==tX)
 					break;
@@ -210,7 +217,7 @@ TPonto *GeraLinha(TPonto *pPonto, TLinha &ptr, char psimbolo)
 		for(x=minX;x<=maxX;x++)
 		{
 			tY = a+(b*x);
-			for(t=0;t<40;t++)
+			for(t=0;t<=40;t++)
 			{
 				if(t==tY)
 					break;
@@ -248,14 +255,76 @@ TPonto *GeraLinha(TPonto *pPonto, TLinha &ptr, char psimbolo)
 	}
 	return pPonto;	
 }
+
 // Função para Atualizar o Grid
-void AtualizaGrafico(char grid[40][40], struct TVPontos &ppontos, struct TVLinhas &plinhas, struct TVTriangulos &ptriangs, struct TVRetangulos &prets)
+void AtualizaGrafico(char grid[41][41], struct TVPontos &ppontos, struct TVLinhas &plinhas, struct TVTriangulos &ptriangs, struct TVRetangulos &prets)
 {
-	int imp=0, k=0;
+	// Variaveis Locais
+	int k=0, i=0, j=0;
 	TPonto *Aux;
-	for(int j=0; j<41; j++) // Cadeia de Linhas
+
+	// Gerando o Grid Cru
+	for(j=1; j<41; j++) // Cadeia de Linhas
 	{
-		for(int i=0; i<42; i++) // Cadeia de Colunas
+		for(i=1; i<41; i++) // Cadeia de Colunas
+			grid[i][j] = '.';
+	}
+	
+	// Replicando dados em Coordenadas
+	
+	// Hierarquia 04: Retangulos
+	if(prets.Qtde!=0)
+	{
+		for(k=0; k<prets.Qtde; k++)
+		{
+			Aux = prets.Elementos[k].Linha1.Ponto1.Prox;
+			while(Aux!=NULL)
+			{
+				grid[Aux->x][Aux->y] = Aux->simb;
+				Aux = Aux->Prox;
+			}
+		}
+	}		
+
+	// Hierarquia 03: Triangulos
+	if(ptriangs.Qtde!=0)
+	{
+		for(k=0; k<ptriangs.Qtde; k++)
+		{
+			Aux = ptriangs.Elementos[k].Linha1.Ponto1.Prox;
+			while(Aux!=NULL)
+			{
+				grid[Aux->x][Aux->y] = Aux->simb;
+				Aux = Aux->Prox;
+			}
+		}
+	}	
+	
+	// Hierarquia 02: Linhas
+	if(plinhas.Qtde!=0)
+	{
+		for(k=0; k<plinhas.Qtde; k++)
+		{
+			Aux = plinhas.Elementos[k].Ponto1.Prox;
+			while(Aux != NULL)
+			{
+				grid[Aux->x][Aux->y] = Aux->simb;
+				Aux = Aux->Prox;
+			}
+		}
+	}
+
+	// Hierarquia 01: Pontos
+	if(ppontos.Qtde!=0)
+	{
+		for(k=0; k<ppontos.Qtde; k++)
+			grid[ppontos.Elementos[k].x][ppontos.Elementos[k].y] = ppontos.Elementos[k].simb;
+	}
+	
+	// Imprimindo o Grid Atualizado
+	for(j=0; j<41; j++) // Cadeia de Linhas
+	{
+		for(i=0; i<42; i++) // Cadeia de Colunas
 		{
 			// Imprindo as Coordenadas
 			// Colunas
@@ -263,184 +332,31 @@ void AtualizaGrafico(char grid[40][40], struct TVPontos &ppontos, struct TVLinha
 			{
 				if (i==0)
 					printf("   ");
-				else if((i>0)&&(i<11))
-					printf("0%d ", i-1);
-				else if ((i>10)&&(i<41))
-					printf("%d ", i-1);
+				else if((i>0)&&(i<10))
+					printf("0%d ", i);
+				else if ((i>9)&&(i<41))
+					printf("%d ", i);
 				else if(i==41)
 					printf("\n\n");
 			}
 			// Linhas
 			if(i==0)
 			{
-				if((j>0)&&(j<11))
-					printf("0%d ", j-1);
-				else if ((j>10)&&(j<41))
-					printf("%d ", j-1);
+				if((j>0)&&(j<10))
+					printf("0%d ", j);
+				else if ((j>9)&&(j<41))
+					printf("%d ", j);
 			}
-			// Imprimindo o Grid
-			if((i>=1)&&(j>=1))
+			if((i>0)&&(j>0))
 			{
 				if(i==41) // Caso para pular linha
 					printf("\n\n");
 				else
 				{
-					// Senquencia de Hierarquia 04: Plotando Retangulos
-					if(prets.Qtde!=0)
-					{
-						for(k=0; k<prets.Qtde; k++)
-						{
-							// Linha 1 Ponto 1
-							if(prets.Elementos[k].Linha1.Ponto1.x == i-1)
-							{
-								if(prets.Elementos[k].Linha1.Ponto1.y == j-1)
-								{
-									grid[i][j] = prets.Elementos[k].Linha1.Ponto1.simb;
-									imp++;
-									break;
-								}
-							}
-							// Nós
-							else
-							{
-								Aux = prets.Elementos[k].Linha1.Ponto1.Prox;
-								while(Aux != NULL)
-								{
-									if(Aux->x == i-1)
-									{
-										if(Aux->y == j-1)
-										{
-											grid[i][j] = Aux->simb;
-											imp++;
-											break;
-										}
-									}
-									Aux = Aux->Prox;
-								}
-							}
-							// Linha 2 Ponto 1
-							if(prets.Elementos[k].Linha2.Ponto1.x == i-1)
-							{
-								if(prets.Elementos[k].Linha2.Ponto1.y == j-1)
-								{
-									grid[i][j] = prets.Elementos[k].Linha2.Ponto1.simb;
-									imp++;
-									break;
-								}
-							}
-						}
-					}					
-					
-					// Sequencia de Hierarquia 03: Plotando Triangulos
-					if(ptriangs.Qtde!=0)
-					{
-						for(k=0; k<ptriangs.Qtde; k++)
-						{
-							// Ponto 1 Linha 1
-							if(ptriangs.Elementos[k].Linha1.Ponto1.x == i-1)
-							{
-								if(ptriangs.Elementos[k].Linha1.Ponto1.y == j-1)
-								{									
-									grid[i][j] = ptriangs.Elementos[k].Linha1.Ponto1.simb;
-									imp++;
-									break;
-
-								}
-							}
-							// Nós
-							else
-							{
-								Aux = ptriangs.Elementos[k].Linha1.Ponto1.Prox;
-								while(Aux != NULL)
-								{
-									if(Aux->x == i-1)
-									{
-										if(Aux->y == j-1)
-										{
-											grid[i][j] = Aux->simb;
-											imp++;
-											break;
-										}
-									}
-									Aux = Aux->Prox;
-								}
-							}
-						}
-					}					
-					
-					// Sequencia de Hierarquia 02: Plotando Linhas
-					if(plinhas.Qtde!=0)
-					{
-						for(k=0; k<plinhas.Qtde; k++)
-						{
-							// Ponto 1
-							if(plinhas.Elementos[k].Ponto1.x == i-1)
-							{
-								if(plinhas.Elementos[k].Ponto1.y == j-1)
-								{
-									grid[i][j] = plinhas.Elementos[k].Ponto1.simb;
-									imp++;
-									break;
-								}
-							}
-							// Nós
-							else
-							{
-								Aux = plinhas.Elementos[k].Ponto1.Prox;
-								while(Aux != NULL)
-								{
-									if(Aux->x == i-1)
-									{
-										if(Aux->y == j-1)
-										{
-											grid[i][j] = Aux->simb;
-											imp++;
-											break;
-										}
-									}
-									Aux = Aux->Prox;
-								}
-							}
-							// Ponto2
-							if(plinhas.Elementos[k].Ponto2.x == i-1)
-							{
-								if(plinhas.Elementos[k].Ponto2.y == j-1)
-								{
-									grid[i][j] = plinhas.Elementos[k].Ponto2.simb;
-									imp++;
-									break;
-								}
-							}
-						}
-					}
-						
-					// Sequencia de Hierarquia 01: Plotando Pontos
-					if(ppontos.Qtde!=0)
-					{
-						for(k=0; k<ppontos.Qtde; k++)
-						{
-							if(ppontos.Elementos[k].x == i-1)
-							{
-								if(ppontos.Elementos[k].y == j-1)
-								{
-									grid[i][j] = ppontos.Elementos[k].simb;
-									imp++;
-								}
-							}
-						}
-					}
-					if (imp==0)
-						grid[i][j] = '.';
-					else
-						imp=0;					
-					
-					if((ppontos.Qtde==0)&&(plinhas.Qtde==0)&&(ptriangs.Qtde==0)&&(prets.Qtde==0))
-						grid[i][j] = '.';
-						
-					printf(" %c ", grid[i][j]);
+				printf(" %c ", grid[i][j]); // Impressão da coordenada
 				}
 			}
-		}	
+		}
 	}
 }
 
@@ -470,6 +386,7 @@ void PlotaLinha(struct TVLinhas &linhas, struct TLinha &ptr, char psimbolo)
 	linhas.Elementos[linhas.Qtde].Ponto2.simb = psimbolo;
 	linhas.Qtde++;
 }
+
 // Função para adicionar o Triangulo no Conjunto de Triangulos
 void PlotaTriangulo(struct TVTriangulos &triangulos, struct TTriangulo &ptr, char psimbolo)
 {
@@ -536,7 +453,7 @@ void PlotaTriangulo(struct TVTriangulos &triangulos, struct TTriangulo &ptr, cha
 		}
 	}
 	pPonto = GeraLinha(pPonto,ptr.Linha1,psimbolo);
-	pPonto = GeraLinha(pPonto,ptr.Linha2,psimbolo); // CHECK
+	pPonto = GeraLinha(pPonto,ptr.Linha2,psimbolo);
 	pPonto = GeraLinha(pPonto,ptr.Linha3,psimbolo);
 	triangulos.Elementos[triangulos.Qtde].Linha1.Ponto1.x = pPonto->x;
 	triangulos.Elementos[triangulos.Qtde].Linha1.Ponto1.y = pPonto->y;
@@ -545,7 +462,7 @@ void PlotaTriangulo(struct TVTriangulos &triangulos, struct TTriangulo &ptr, cha
 	triangulos.Qtde++;	
 }
 
-// Função para adiconar o Retangulo no Conjunto de Retangulos
+// Função para adicionar o Retangulo no Conjunto de Retangulos
 void PlotaRetangulo(struct TVRetangulos &retangulos, struct TRetangulo &ptr, char psimbolo)
 {
 	TPonto *pPonto;
@@ -563,11 +480,11 @@ void PlotaRetangulo(struct TVRetangulos &retangulos, struct TRetangulo &ptr, cha
 	ptr.Linha4.Ponto1.x = ptr.Linha1.Ponto1.x;
 	ptr.Linha4.Ponto1.y = ptr.Linha1.Ponto1.y;
 	ptr.Linha4.Ponto2.x = ptr.Linha2.Ponto2.x;
-	ptr.Linha4.Ponto2.y = ptr.Linha2.Ponto2.x;
+	ptr.Linha4.Ponto2.y = ptr.Linha2.Ponto2.y;
 	pPonto = GeraLinha(pPonto,ptr.Linha1,psimbolo);
 	pPonto = GeraLinha(pPonto,ptr.Linha2,psimbolo);
 	pPonto = GeraLinha(pPonto,ptr.Linha3,psimbolo);
-	pPonto = GeraLinha(pPonto,ptr.Linha4,psimbolo); // CHECK
+	pPonto = GeraLinha(pPonto,ptr.Linha4,psimbolo);
 	retangulos.Elementos[retangulos.Qtde].Linha1.Ponto1.x = pPonto->x;
 	retangulos.Elementos[retangulos.Qtde].Linha1.Ponto1.y = pPonto->y;
 	retangulos.Elementos[retangulos.Qtde].Linha2.Ponto1.x = ptr.Linha2.Ponto1.x;

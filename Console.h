@@ -1,4 +1,3 @@
-#include "GeoLib.h"
 /* Console.h é uma biblioteca que compõe todas as funções e procedimentos para a execução de tarefas
  * não triviais que não fazem parte da GeoLib.h, desenvolvido para a o Trabalho 01 de EDA 2/2013.
  */
@@ -6,15 +5,22 @@
 // Sumário
 /* int Menu()
  * void *ExcluiCalda(*TPonto)
+ * void validaPonto(int,int)
+ * void validaAltLarg(int,int,bool,bool)
  * void iPonto(TVPontos)
  * void ePonto(TVPontos)
  * void iLinha(TVLinhas)
  * void eLinha(TVLinhas)
+ * void iTriangulo(TVTriangulos)
+ * void eTriangulos(TVTriangulos)
  * void iRetangulo(TVRetangulos)
  * void eRetangulo(TVRetangulos)
  * void SetWindow(int,int)
  */
  
+// Bibliotecas
+#include "GeoLib.h" 
+
 // Função que define a opção escolhida no menu
 int Menu()
 {
@@ -41,8 +47,7 @@ int Menu()
     return (op); // Retorna a opção
 }
 
-
-// Funções de Tratamento de Listas
+// Função de Tratamento de Listas -> Exclusão
 TPonto *ExcluiCalda(TPonto *pLista)
 {
 	TPonto *pAux;
@@ -54,7 +59,85 @@ TPonto *ExcluiCalda(TPonto *pLista)
 	return pLista;
 }
 
-// Cadeias de Funções e Procedimentos que tem por objetivo a Inclusão de Figuras
+// Validações
+void validaPonto(int &x, int &y)
+{
+	while((x<=0)or(y<=0)or(x>40)or(y>40))
+	{
+		printf("As coordenadas podem ter valor minimo de 1 at%c um m%cximo de 40\n", 130, 160);
+		printf("Por favor, insira novamente a coordenada:\n");
+		scanf("%d %d", &x, &y);
+		fflush(stdin);
+	}	
+}
+
+void validaAltLarg(int coord, int &plus, bool neg, bool tipo)
+{
+	int alcance=0;
+	while(0)
+	{
+		if(tipo==0)
+		{
+			if(neg==0)
+			{
+				alcance = coord-1;
+				if(plus>alcance)
+				{
+				printf("O alcance m%cximo da Altura %c de: %d", 160, 130, alcance);
+				printf("Digite novamente a altura:\n");
+				scanf("%d", &plus);
+				fflush(stdin);
+				}
+				else
+					break;
+			}
+			else if(neg==1)
+			{
+				alcance = 39-coord;
+				if(plus>alcance)
+				{
+				printf("O alcance m%cximo da Altura %c de: %d", 160, 130, alcance);
+				printf("Digite novamente a altura:\n");
+				scanf("%d", &plus);
+				fflush(stdin);
+				}
+				else
+					break;
+			}	
+		}
+		else if(tipo==1)
+		{
+			if(neg==0)
+			{
+				alcance = coord-1;
+				if(plus>alcance)
+				{
+				printf("O alcance m%cximo da Largura %c de: %d", 160, 130, alcance);
+				printf("Digite novamente a largura:\n");
+				scanf("%d", &plus);
+				fflush(stdin);
+				}
+				else
+					break;
+			}
+			else if(neg==1)
+			{
+				alcance = 39-coord;
+				if(plus>alcance)
+				{
+				printf("O alcance m%cximo da Largura %c de: %d", 160, 130, alcance);
+				printf("Digite novamente a largura:\n");
+				scanf("%d", &plus);
+				fflush(stdin);
+				}
+				else
+					break;
+			}	
+		}
+	}
+}
+
+// Cadeias de Funções e Procedimentos que tem por objetivo a Inclusão/Exclusão de Figuras
 
 // Inserindo um Ponto
 void iPonto(struct TVPontos &pontos)
@@ -73,6 +156,7 @@ void iPonto(struct TVPontos &pontos)
 		printf("Exemplo: 30 14\n");
 		scanf("%d %d", &ponto.x, &ponto.y);
 		fflush(stdin);
+		validaPonto(ponto.x,ponto.y);
 		printf("Digite o s%cmbolo do ponto:\n", 161);
 		scanf("%c",&simbolo);
 		fflush(stdin);
@@ -98,6 +182,7 @@ void ePonto(struct TVPontos &pontos)
 		printf("Insira o c%cdigo do ponto que deseja excluir:\n", 162);
 		printf("Exemplo: 2\n");
 		scanf("%d", &codigo);
+		fflush(stdin);
 		if((codigo>0)&&(codigo<=pontos.Qtde))
 		{
 			pontos.Elementos[codigo-1].x = 40;
@@ -133,10 +218,12 @@ void iLinha(struct TVLinhas &linhas)
 		printf("Exemplo: 30 14\n");
 		scanf("%d %d", &linha.Ponto1.x, &linha.Ponto1.y);
 		fflush(stdin);
+		validaPonto(linha.Ponto1.x,linha.Ponto1.y);
 		printf("Digite a coordenada do segundo ponto em par ordenado (separados por um espa%co):\n", 135);
 		printf("Exemplo: 6 12\n");
 		scanf("%d %d", &linha.Ponto2.x, &linha.Ponto2.y);
 		fflush(stdin);
+		validaPonto(linha.Ponto2.x,linha.Ponto2.y);
 		printf("Digite o s%cmbolo da linha:\n", 161);
 		scanf("%c",&simbolo);
 		fflush(stdin);
@@ -212,6 +299,7 @@ void iTriangulo(struct TVTriangulos &triangulos)
 		printf("Exemplo: 30 14\n");
 		scanf("%d %d", &triangulo.Linha1.Ponto1.x, &triangulo.Linha1.Ponto1.y);
 		fflush(stdin);
+		validaPonto(triangulo.Linha1.Ponto1.x,triangulo.Linha1.Ponto1.y);
 		printf("Digite a altura do Triangulo:\n");
 		printf("Exemplo: 17\n");
 		scanf("%d", &triangulo.alt);
@@ -221,6 +309,7 @@ void iTriangulo(struct TVTriangulos &triangulos)
 		scanf("%d", &neg_alt);
 		triangulo.neg_alt = neg_alt;
 		fflush(stdin);
+		validaAltLarg(triangulo.Linha1.Ponto1.y, triangulo.alt, triangulo.neg_alt, 0);
 		printf("Digite a largura do Triangulo:\n");
 		printf("Exemplo: 5\n");
 		scanf("%d", &triangulo.larg);
@@ -230,6 +319,7 @@ void iTriangulo(struct TVTriangulos &triangulos)
 		scanf("%d", &neg_larg);
 		triangulo.neg_larg = neg_larg;
 		fflush(stdin);
+		validaAltLarg(triangulo.Linha1.Ponto1.x, triangulo.larg, triangulo.neg_larg, 1);
 		printf("Digite o s%cmbolo do triangulo:\n", 161);
 		scanf("%c",&simbolo);
 		fflush(stdin);
@@ -320,11 +410,13 @@ void iRetangulo(struct TVRetangulos &retangulos)
 		printf("Exemplo: 30 14\n");
 		scanf("%d %d", &retangulo.Linha1.Ponto1.x, &retangulo.Linha1.Ponto1.y);
 		fflush(stdin);
+		validaPonto(retangulo.Linha1.Ponto1.x,retangulo.Linha1.Ponto1.y);
 		printf("Digite a coordenada do segundo ponto em par ordenado (separados por um espa%co):\n", 135);
 		printf("Exemplo: 6 12\n");
 		scanf("%d %d", &retangulo.Linha2.Ponto1.x, &retangulo.Linha2.Ponto1.y);
 		fflush(stdin);
-		if((retangulo.Linha1.Ponto1.x == retangulo.Linha2.Ponto1.x)or(retangulo.Linha1.Ponto1.y == retangulo.Linha2.Ponto1.y))
+		validaPonto(retangulo.Linha2.Ponto1.x,retangulo.Linha2.Ponto1.y);
+		if((retangulo.Linha1.Ponto1.x == retangulo.Linha2.Ponto1.x)||(retangulo.Linha1.Ponto1.y == retangulo.Linha2.Ponto1.y))
 		{
 			printf("\nNao %c possivel gerar retangulos com pontos na mesma linha/coluna!\n", 130);
 			system("PAUSE");
@@ -394,6 +486,7 @@ void eRetangulo(struct TVRetangulos &retangulos)
 		}
 	}
 }
+
 // Procedimento de Redimensionamento de Janela
 void SetWindow(int Width, int Height) 
 {
