@@ -106,10 +106,11 @@ TPonto *IncluiCalda(TPonto *pLista, int x, int y, char psimbolo)
 TPonto *GeraLinha(TPonto *pPonto, TLinha &ptr, char psimbolo)
 {
 	// Variaveis Locais
-	float a = 0, b = 0, sX=0, sX2=0, sY=0, sXY=0, tX=0;
-	int maxY = 0, y=0, t=0, x=0, minY =0, i=0, antX=0;
+	float a = 0, b = 0, sX=0, sX2=0, sY=0, sXY=0, tX=0, tY=0;
+	int maxX = 0, maxY = 0, y=0, t=0, x=0, minX = 0, minY =0, i=0, mTermo=0;
 	if(ptr.Ponto1.x == ptr.Ponto2.x)
 	{
+		// ERRO ESTÁ AQUI
 		if(ptr.Ponto1.y > ptr.Ponto2.y)
 		{
 			for(i=ptr.Ponto2.y;i<ptr.Ponto1.y;i++)
@@ -155,9 +156,20 @@ TPonto *GeraLinha(TPonto *pPonto, TLinha &ptr, char psimbolo)
 			maxY = ptr.Ponto2.y;
 			minY = ptr.Ponto1.y;
 		}
-		for(y=minY+1;y<maxY;y++)
+		
+		if (ptr.Ponto1.x > ptr.Ponto2.x)
 		{
-			antX = x;
+			maxX = ptr.Ponto1.x;
+			minX = ptr.Ponto2.x;
+		}
+		else
+		{
+			maxX = ptr.Ponto2.x;
+			minX = ptr.Ponto1.x;
+		}
+		
+		for(y=minY;y<=maxY;y++)
+		{
 			tX = (y - a)/b;
 			for(t=0;t<40;t++)
 			{
@@ -165,35 +177,74 @@ TPonto *GeraLinha(TPonto *pPonto, TLinha &ptr, char psimbolo)
 					break;
 				if(t>tX)
 				{
-					if(tX-t-1 > t-tX)
+					if(tX-(t-1) > t-tX)
 					{
 						tX=t;
 						break;
 					}
-					else
+					else if(tX-(t-1) < t-tX)
 					{
 						tX=t-1;
+						break;
+					}
+					else if(tX-(t-1) == t-tX)
+					{
+						tX=t-1;
+						mTermo++;
 						break;
 					}
 				}
 			}
 			x = int(tX);
-				pPonto = IncluiCalda(pPonto,x,y,psimbolo);
-			if((antX!=0)&&(antX!=x))
+			if(mTermo==1)
 			{
-				if(antX>x+1)
-				{
-					for(i=antX;i>x;i--)
-						pPonto = IncluiCalda(pPonto,i,y,psimbolo);
-				}
-				else if(antX+1<x)
-				{
-					for(i=antX;i<x;i++)
-						pPonto = IncluiCalda(pPonto,i,y,psimbolo);
-				}
-			}	
+				pPonto = IncluiCalda(pPonto,x,y,psimbolo);
+				x++;
+				pPonto = IncluiCalda(pPonto,x,y,psimbolo);
+				mTermo = 0;
+			}
+			else
+				pPonto = IncluiCalda(pPonto,x,y,psimbolo);
 		}
 		
+		for(x=minX;x<=maxX;x++)
+		{
+			tY = a+(b*x);
+			for(t=0;t<40;t++)
+			{
+				if(t==tY)
+					break;
+				if(t>tY)
+				{
+					if(tY-(t-1) > t-tY)
+					{
+						tY=t;
+						break;
+					}
+					else if(tY-(t-1) < t-tY)
+					{
+						tY=t-1;
+						break;
+					}
+					else if(tY-(t-1) == t-tY)
+					{
+						tY=t-1;
+						mTermo++;
+						break;
+					}
+				}
+			}
+		y = int(tY);
+			if(mTermo==1)
+			{
+				pPonto = IncluiCalda(pPonto,x,y,psimbolo);
+				y++;
+				pPonto = IncluiCalda(pPonto,x,y,psimbolo);
+				mTermo = 0;
+			}
+			else
+				pPonto = IncluiCalda(pPonto,x,y,psimbolo);
+		}
 	}
 	return pPonto;	
 }
@@ -397,7 +448,10 @@ void PlotaLinha(struct TVLinhas &linhas, struct TLinha &ptr, char psimbolo)
 	TPonto *pPonto;
 	pPonto = (TPonto *) malloc(sizeof(TPonto));
 	pPonto = &ptr.Ponto1;
+	//pPonto->Prox = &ptr.Ponto2;
+	//ptr.Ponto2.Prox = NULL;
 	pPonto = GeraLinha(pPonto,ptr,psimbolo);
+	system("PAUSE");
 	linhas.Elementos[linhas.Qtde].Ponto1.x = pPonto->x;
 	linhas.Elementos[linhas.Qtde].Ponto1.y = pPonto->y;
 	linhas.Elementos[linhas.Qtde].Ponto2.x = ptr.Ponto2.x;

@@ -71,6 +71,6 @@ int main()
     }//Fim do While
 
     printf("\nFim do Programa!\n\n");
-    system("pause");
+	system("PAUSE");
 	return 0;
 }
