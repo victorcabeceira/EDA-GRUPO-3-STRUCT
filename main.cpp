@@ -48,7 +48,7 @@ int main()
         AtualizaGrafico(grid,pontos,linhas,triangulos,retangulos); // GeoLib.h	
         opcao=Menu(); // Console.h	
         system ("cls");
-        switch (opcao)
+        switch (opcao) // Tratamento da Opção Escolhida
 		{
             case 1: // Incluir Ponto
 				{
@@ -92,6 +92,7 @@ int main()
                 }				
         }
     }
+	// Impressões finais
 	printf("\nFim do Programa!\n\n");
 	system("PAUSE");
 	return 0;

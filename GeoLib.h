@@ -31,7 +31,7 @@ struct TPonto{
 	int y;
 	char simb;
 	struct TPonto *Prox;
-	TPonto(){x=40, y=40, simb=',', Prox=NULL;}
+	TPonto(){x=0, y=0, simb=',', Prox=NULL;}
 };
 
 // Linha
@@ -101,7 +101,7 @@ TPonto *IncluiCalda(TPonto *pLista, int x, int y, char psimbolo)
 	pNovoNo->simb = psimbolo;
 	pNovoNo->Prox = NULL;
 	pAux = pLista;
-	while(pAux->Prox!=NULL)
+	while(pAux->Prox!=NULL) // Enquanto pAux não apontar para a Calda
 		pAux = pAux->Prox;
 	pAux->Prox = pNovoNo;
 	return pLista;
@@ -142,10 +142,10 @@ TPonto *GeraLinha(TPonto *pPonto, TLinha &ptr, char psimbolo)
 		}
 	}
 	
-	// Casos de Linhas em Geral
+	// Casos de Linhas não-horizontais e não-verticais
 	if((ptr.Ponto1.x != ptr.Ponto2.x)&&(ptr.Ponto1.y != ptr.Ponto2.y))
 	{
-		// Calculo da Reta
+		// Calculo da Reta (y = a + bx)
 		sX = ptr.Ponto1.x + ptr.Ponto2.x;
 		sX2 = (ptr.Ponto1.x*ptr.Ponto1.x) + (ptr.Ponto2.x*ptr.Ponto2.x);
 		sY = ptr.Ponto1.y + ptr.Ponto2.y;
@@ -263,7 +263,7 @@ void AtualizaGrafico(char grid[41][41], struct TVPontos &ppontos, struct TVLinha
 	int k=0, i=0, j=0;
 	TPonto *Aux;
 
-	// Gerando o Grid Cru
+	// Gerando o Grid sem Figuras Geométricas
 	for(j=1; j<41; j++) // Cadeia de Linhas
 	{
 		for(i=1; i<41; i++) // Cadeia de Colunas
@@ -459,7 +459,11 @@ void PlotaTriangulo(struct TVTriangulos &triangulos, struct TTriangulo &ptr, cha
 	triangulos.Elementos[triangulos.Qtde].Linha1.Ponto1.y = pPonto->y;
 	triangulos.Elementos[triangulos.Qtde].Linha1.Ponto1.Prox = pPonto->Prox;
 	triangulos.Elementos[triangulos.Qtde].Linha1.Ponto1.simb = psimbolo;
-	triangulos.Qtde++;	
+	triangulos.Elementos[triangulos.Qtde].alt = ptr.alt;
+	triangulos.Elementos[triangulos.Qtde].neg_alt = ptr.neg_alt;
+	triangulos.Elementos[triangulos.Qtde].larg = ptr.larg;
+	triangulos.Elementos[triangulos.Qtde].neg_larg = ptr.neg_larg;
+	triangulos.Qtde++;
 }
 
 // Função para adicionar o Retangulo no Conjunto de Retangulos
